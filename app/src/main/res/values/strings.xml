@@ -50,6 +50,8 @@
     <string name="pref_lead_time_summary">Get a notification this many days before a product expires</string>
     <string name="pref_notifications_title">Enable notifications</string>
     <string name="pref_notifications_summary">Notifications are currently disabled in system settings</string>
+    <string name="pref_scan_sound_title">Scan sound</string>
+    <string name="pref_scan_sound_summary">Play a beep when a barcode is scanned successfully</string>
 
     <!-- Notifications -->
     <string name="notification_channel_name">Expiry reminders</string>

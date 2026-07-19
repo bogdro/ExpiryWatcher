@@ -11,6 +11,8 @@ public final class Constants {
     public static final String PREF_LEAD_TIME_DAYS = "lead_time_days";
     public static final int DEFAULT_LEAD_TIME_DAYS = 3;
     public static final String PREF_ASKED_NOTIFICATION_PERMISSION = "asked_notification_permission";
+    public static final String PREF_SCAN_SOUND_ENABLED = "scan_sound_enabled";
+    public static final boolean DEFAULT_SCAN_SOUND_ENABLED = true;
 
     public static final String NOTIFICATION_CHANNEL_ID = "expiry_reminders";
     public static final int NOTIFICATION_ID_EXPIRY_SUMMARY = 1001;

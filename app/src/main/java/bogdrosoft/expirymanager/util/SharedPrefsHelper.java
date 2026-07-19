@@ -16,6 +16,14 @@ public final class SharedPrefsHelper {
         prefs(context).edit().putInt(Constants.PREF_LEAD_TIME_DAYS, days).apply();
     }
 
+    public static boolean isScanSoundEnabled(Context context) {
+        return prefs(context).getBoolean(Constants.PREF_SCAN_SOUND_ENABLED, Constants.DEFAULT_SCAN_SOUND_ENABLED);
+    }
+
+    public static void setScanSoundEnabled(Context context, boolean enabled) {
+        prefs(context).edit().putBoolean(Constants.PREF_SCAN_SOUND_ENABLED, enabled).apply();
+    }
+
     private static SharedPreferences prefs(Context context) {
         return context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
     }

@@ -28,9 +28,12 @@ public class SettingsActivity extends AppCompatActivity {
         binding.toolbar.setNavigationOnClickListener(v -> finish());
 
         binding.editLeadTime.setText(String.valueOf(SharedPrefsHelper.getLeadTimeDays(this)));
+        binding.switchScanSound.setChecked(SharedPrefsHelper.isScanSoundEnabled(this));
 
         binding.buttonSaveLeadTime.setOnClickListener(v -> saveLeadTime());
         binding.buttonOpenNotificationSettings.setOnClickListener(v -> openNotificationSettings());
+        binding.switchScanSound.setOnCheckedChangeListener((buttonView, isChecked) ->
+                SharedPrefsHelper.setScanSoundEnabled(this, isChecked));
     }
 
     @Override

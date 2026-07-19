@@ -13,6 +13,7 @@ import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
 import bogdrosoft.expirymanager.R;
+import bogdrosoft.expirymanager.util.SharedPrefsHelper;
 
 /**
  * Wraps zxing-android-embedded's scan contract plus the CAMERA runtime permission flow.
@@ -62,7 +63,7 @@ public class BarcodeScanHelper {
     private void launchScan() {
         ScanOptions options = new ScanOptions();
         options.setDesiredBarcodeFormats(ScanOptions.ALL_CODE_TYPES);
-        options.setBeepEnabled(true);
+        options.setBeepEnabled(SharedPrefsHelper.isScanSoundEnabled(activity));
         options.setOrientationLocked(false);
         scanLauncher.launch(options);
     }
