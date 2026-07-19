@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Simple calendar glyph, inset to respect the adaptive-icon safe zone -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M34,30 L34,24 L42,24 L42,30 L66,30 L66,24 L74,24 L74,30 L82,30 C84.2,30 86,31.8 86,34 L86,80 C86,82.2 84.2,84 82,84 L26,84 C23.8,84 22,82.2 22,80 L22,34 C22,31.8 23.8,30 26,30 Z M30,44 L30,78 L78,78 L78,44 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M38,52 h10 v10 h-10 z M54,52 h10 v10 h-10 z M38,66 h10 v8 h-10 z" />
+</vector>

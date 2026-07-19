@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#2E7D32</color>
+    <color name="primary_dark">#1B5E20</color>
+    <color name="on_primary">#FFFFFF</color>
+    <color name="accent">#FF6F00</color>
+
+    <color name="status_expired">#C62828</color>
+    <color name="status_soon">#EF6C00</color>
+    <color name="status_ok">#424242</color>
+
+    <color name="background_light">#FAFAFA</color>
+    <color name="background_dark">#121212</color>
+</resources>
