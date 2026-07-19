@@ -150,7 +150,8 @@
                     android:layout_marginStart="8dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@string/action_scan_barcode"
-                    android:src="@drawable/ic_barcode_scan" />
+                    android:src="@drawable/ic_barcode_scan"
+                    android:tint="?attr/colorOnSurface" />
 
             </LinearLayout>
 
