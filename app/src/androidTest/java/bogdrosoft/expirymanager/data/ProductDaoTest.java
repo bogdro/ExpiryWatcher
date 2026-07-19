@@ -65,20 +65,6 @@ public class ProductDaoTest {
     }
 
     @Test
-    public void getExpiringByThreshold_excludesItemsAfterThreshold() {
-        LocalDate today = LocalDate.now();
-        productDao.insert(newProduct("Overdue", today.minusDays(2)));
-        productDao.insert(newProduct("WithinLeadTime", today.plusDays(2)));
-        productDao.insert(newProduct("FarFuture", today.plusDays(30)));
-
-        List<Product> result = productDao.getExpiringByThresholdSync(today.plusDays(3).toEpochDay());
-
-        assertEquals(2, result.size());
-        assertEquals("Overdue", result.get(0).name);
-        assertEquals("WithinLeadTime", result.get(1).name);
-    }
-
-    @Test
     public void update_changesExistingRowRatherThanInserting() {
         long id = productDao.insert(newProduct("Milk", LocalDate.now().plusDays(3)));
 

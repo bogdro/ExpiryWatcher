@@ -17,16 +17,15 @@ public interface ProductDao {
     @Query("SELECT * FROM products ORDER BY expiry_date ASC")
     LiveData<List<Product>> getAllSortedByExpiry();
 
-    // Synchronous twin of getAllSortedByExpiry(), used by DAO tests where asserting on a
-    // LiveData emission would otherwise need extra test-only infrastructure.
+    // Synchronous twin of getAllSortedByExpiry(): used by ExpiryCheckWorker, which needs to
+    // filter by each product's own effective (possibly type-overridden) lead time rather than
+    // a single SQL threshold, and by DAO tests where asserting on a LiveData emission would
+    // otherwise need extra test-only infrastructure.
     @Query("SELECT * FROM products ORDER BY expiry_date ASC")
     List<Product> getAllSortedByExpirySync();
 
     @Query("SELECT * FROM products WHERE id = :id")
     LiveData<Product> getById(long id);
-
-    @Query("SELECT * FROM products WHERE expiry_date <= :thresholdEpochDay ORDER BY expiry_date ASC")
-    List<Product> getExpiringByThresholdSync(long thresholdEpochDay);
 
     @Query("SELECT COUNT(*) FROM products")
     int countSync();
