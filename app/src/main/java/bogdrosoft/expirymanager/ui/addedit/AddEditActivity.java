@@ -1,9 +1,12 @@
 package bogdrosoft.expirymanager.ui.addedit;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
@@ -70,8 +73,28 @@ public class AddEditActivity extends AppCompatActivity {
         }
 
         binding.editExpiryDate.setOnClickListener(v -> showDatePicker());
-        binding.buttonScan.setOnClickListener(v -> scanHelper.startScan());
+        binding.buttonScan.setOnClickListener(v -> {
+            hideKeyboardAndClearFocus();
+            scanHelper.startScan();
+        });
         binding.buttonSave.setOnClickListener(v -> onSaveClicked());
+    }
+
+    /**
+     * The expiry-date field and the scan button are not text inputs, so tapping them doesn't
+     * naturally move focus (and hide the keyboard) away from whichever EditText was focused
+     * beforehand. Called explicitly before acting on either.
+     */
+    private void hideKeyboardAndClearFocus() {
+        View focused = getCurrentFocus();
+        if (focused == null) {
+            return;
+        }
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(focused.getWindowToken(), 0);
+        }
+        focused.clearFocus();
     }
 
     private void populateFields(@Nullable Product product) {
@@ -90,6 +113,7 @@ public class AddEditActivity extends AppCompatActivity {
     }
 
     private void showDatePicker() {
+        hideKeyboardAndClearFocus();
         LocalDate seed = selectedExpiryDate != null ? selectedExpiryDate : LocalDate.now();
         new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
             selectedExpiryDate = LocalDate.of(year, month + 1, dayOfMonth);
