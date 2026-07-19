@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 import bogdrosoft.expirymanager.R;
 import bogdrosoft.expirymanager.data.entity.Product;
@@ -63,6 +64,14 @@ public class AddEditActivity extends AppCompatActivity {
 
         viewModel = new ViewModelProvider(this).get(AddEditViewModel.class);
 
+        ArrayAdapter<String> typeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new ArrayList<>());
+        binding.editType.setAdapter(typeAdapter);
+        viewModel.getTypeNames().observe(this, names -> {
+            typeAdapter.clear();
+            typeAdapter.addAll(names);
+            typeAdapter.notifyDataSetChanged();
+        });
+
         productId = getIntent().getLongExtra(Constants.EXTRA_PRODUCT_ID, Constants.NO_PRODUCT_ID);
         if (productId == Constants.NO_PRODUCT_ID) {
             setTitle(R.string.title_add_product);
@@ -103,7 +112,7 @@ public class AddEditActivity extends AppCompatActivity {
         }
         currentProduct = product;
         binding.editName.setText(product.name);
-        binding.editType.setText(product.type);
+        binding.editType.setText(product.type, false);
         binding.editQuantity.setText(String.valueOf(product.quantity));
         binding.editUnit.setText(product.unit, false);
         binding.editBarcode.setText(product.barcode);
@@ -129,7 +138,7 @@ public class AddEditActivity extends AppCompatActivity {
                 return;
             }
             binding.editName.setText(defaults.name);
-            binding.editType.setText(defaults.type);
+            binding.editType.setText(defaults.type, false);
             binding.editQuantity.setText(String.valueOf(defaults.quantity));
             binding.editUnit.setText(defaults.unit, false);
             binding.textBarcodePrefillHint.setVisibility(android.view.View.VISIBLE);

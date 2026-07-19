@@ -92,11 +92,13 @@ public class DbImportManager {
                     tables.add(cursor.getString(0));
                 }
             }
-            if (!tables.contains("products") || !tables.contains("barcode_defaults")) {
+            if (!tables.contains("products") || !tables.contains("barcode_defaults")
+                    || !tables.contains("product_types")) {
                 return false;
             }
             return hasColumns(db, "products", "id", "name", "expiry_date", "barcode")
-                    && hasColumns(db, "barcode_defaults", "barcode", "name", "quantity", "unit");
+                    && hasColumns(db, "barcode_defaults", "barcode", "name", "quantity", "unit")
+                    && hasColumns(db, "product_types", "name", "lead_time_days");
         } catch (SQLiteException e) {
             return false;
         }

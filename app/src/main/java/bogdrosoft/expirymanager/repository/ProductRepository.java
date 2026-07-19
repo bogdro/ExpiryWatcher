@@ -1,6 +1,7 @@
 package bogdrosoft.expirymanager.repository;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteConstraintException;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -13,8 +14,10 @@ import java.util.List;
 import bogdrosoft.expirymanager.data.AppDatabase;
 import bogdrosoft.expirymanager.data.dao.BarcodeDefaultsDao;
 import bogdrosoft.expirymanager.data.dao.ProductDao;
+import bogdrosoft.expirymanager.data.dao.ProductTypeDao;
 import bogdrosoft.expirymanager.data.entity.BarcodeDefaults;
 import bogdrosoft.expirymanager.data.entity.Product;
+import bogdrosoft.expirymanager.data.entity.ProductType;
 
 /**
  * Single source of truth for product data used by the UI layer. Wraps Room DAO access
@@ -28,12 +31,14 @@ public class ProductRepository {
 
     private final ProductDao productDao;
     private final BarcodeDefaultsDao barcodeDefaultsDao;
+    private final ProductTypeDao productTypeDao;
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     public ProductRepository(@NonNull Context context) {
         AppDatabase db = AppDatabase.getInstance(context);
         this.productDao = db.productDao();
         this.barcodeDefaultsDao = db.barcodeDefaultsDao();
+        this.productTypeDao = db.productTypeDao();
     }
 
     public LiveData<List<Product>> getAllProducts() {
@@ -77,5 +82,35 @@ public class ProductRepository {
             BarcodeDefaults result = barcodeDefaultsDao.getByBarcodeSync(barcode);
             mainHandler.post(() -> callback.onResult(result));
         });
+    }
+
+    public LiveData<List<ProductType>> getAllTypes() {
+        return productTypeDao.getAllSorted();
+    }
+
+    /**
+     * @param callback delivered {@code true} on success, {@code false} if a type with this
+     *                 name already exists (name is the primary key).
+     */
+    public void addType(ProductType type, Callback<Boolean> callback) {
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            boolean success;
+            try {
+                productTypeDao.insert(type);
+                success = true;
+            } catch (SQLiteConstraintException e) {
+                success = false;
+            }
+            boolean result = success;
+            mainHandler.post(() -> callback.onResult(result));
+        });
+    }
+
+    public void updateType(ProductType type) {
+        AppDatabase.databaseWriteExecutor.execute(() -> productTypeDao.update(type));
+    }
+
+    public void deleteType(ProductType type) {
+        AppDatabase.databaseWriteExecutor.execute(() -> productTypeDao.delete(type));
     }
 }

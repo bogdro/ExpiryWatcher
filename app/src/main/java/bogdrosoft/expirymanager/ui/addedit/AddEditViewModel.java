@@ -5,9 +5,14 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Transformations;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import bogdrosoft.expirymanager.data.entity.BarcodeDefaults;
 import bogdrosoft.expirymanager.data.entity.Product;
+import bogdrosoft.expirymanager.data.entity.ProductType;
 import bogdrosoft.expirymanager.repository.ProductRepository;
 import bogdrosoft.expirymanager.util.Constants;
 
@@ -40,5 +45,15 @@ public class AddEditViewModel extends AndroidViewModel {
 
     public void lookupBarcodeDefaults(String barcode, ProductRepository.Callback<BarcodeDefaults> callback) {
         repository.lookupBarcodeDefaults(barcode, callback);
+    }
+
+    public LiveData<List<String>> getTypeNames() {
+        return Transformations.map(repository.getAllTypes(), types -> {
+            List<String> names = new ArrayList<>();
+            for (ProductType type : types) {
+                names.add(type.name);
+            }
+            return names;
+        });
     }
 }
