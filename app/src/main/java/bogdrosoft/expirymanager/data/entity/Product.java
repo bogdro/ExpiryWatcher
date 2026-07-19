@@ -29,6 +29,12 @@ public class Product {
     @NonNull
     public LocalDate expiryDate = LocalDate.now();
 
+    // When the product was opened, e.g. for tracking a shorter shelf life once unsealed.
+    // Optional and empty by default, unlike expiryDate.
+    @ColumnInfo(name = "open_date")
+    @Nullable
+    public LocalDate openDate;
+
     @Nullable
     public String barcode;
 

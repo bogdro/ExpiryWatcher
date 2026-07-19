@@ -14,6 +14,7 @@
     <string name="status_days_left">%1$d days left</string>
     <string name="item_details_format">%1$s · %2$d %3$s</string>
     <string name="item_expiry_format">Expires %1$s · %2$s</string>
+    <string name="item_open_date_format">Opened %1$s</string>
 
     <!-- Add / edit -->
     <string name="title_add_product">Add product</string>
@@ -23,6 +24,7 @@
     <string name="label_quantity">Quantity</string>
     <string name="label_unit">Unit</string>
     <string name="label_expiry_date">Expiry date</string>
+    <string name="label_open_date">Open date (optional)</string>
     <string name="label_barcode">Barcode</string>
     <string name="action_scan_barcode">Scan barcode</string>
     <string name="action_save">Save</string>

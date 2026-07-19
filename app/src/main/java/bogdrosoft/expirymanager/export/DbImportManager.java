@@ -96,7 +96,7 @@ public class DbImportManager {
                     || !tables.contains("product_types")) {
                 return false;
             }
-            return hasColumns(db, "products", "id", "name", "expiry_date", "barcode")
+            return hasColumns(db, "products", "id", "name", "expiry_date", "open_date", "barcode")
                     && hasColumns(db, "barcode_defaults", "barcode", "name", "quantity", "unit")
                     && hasColumns(db, "product_types", "name", "lead_time_days");
         } catch (SQLiteException e) {

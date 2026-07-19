@@ -3,6 +3,8 @@ package bogdrosoft.expirymanager.ui.addedit;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,6 +40,8 @@ public class AddEditActivity extends AppCompatActivity {
     private Product currentProduct;
     @Nullable
     private LocalDate selectedExpiryDate;
+    @Nullable
+    private LocalDate selectedOpenDate;
 
     private final BarcodeScanHelper scanHelper = new BarcodeScanHelper(this, this::onBarcodeScanned);
 
@@ -82,6 +86,25 @@ public class AddEditActivity extends AppCompatActivity {
         }
 
         binding.editExpiryDate.setOnClickListener(v -> showDatePicker());
+        binding.editOpenDate.setOnClickListener(v -> showOpenDatePicker());
+        binding.editOpenDate.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Catches the field being cleared via the layout's clear-text end icon,
+                // since that doesn't go through showOpenDatePicker().
+                if (s.length() == 0) {
+                    selectedOpenDate = null;
+                }
+            }
+        });
         binding.buttonScan.setOnClickListener(v -> {
             hideKeyboardAndClearFocus();
             scanHelper.startScan();
@@ -118,6 +141,8 @@ public class AddEditActivity extends AppCompatActivity {
         binding.editBarcode.setText(product.barcode);
         selectedExpiryDate = product.expiryDate;
         binding.editExpiryDate.setText(product.expiryDate.format(DATE_FORMATTER));
+        selectedOpenDate = product.openDate;
+        binding.editOpenDate.setText(product.openDate != null ? product.openDate.format(DATE_FORMATTER) : "");
         invalidateOptionsMenu();
     }
 
@@ -127,6 +152,15 @@ public class AddEditActivity extends AppCompatActivity {
         new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
             selectedExpiryDate = LocalDate.of(year, month + 1, dayOfMonth);
             binding.editExpiryDate.setText(selectedExpiryDate.format(DATE_FORMATTER));
+        }, seed.getYear(), seed.getMonthValue() - 1, seed.getDayOfMonth()).show();
+    }
+
+    private void showOpenDatePicker() {
+        hideKeyboardAndClearFocus();
+        LocalDate seed = selectedOpenDate != null ? selectedOpenDate : LocalDate.now();
+        new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
+            selectedOpenDate = LocalDate.of(year, month + 1, dayOfMonth);
+            binding.editOpenDate.setText(selectedOpenDate.format(DATE_FORMATTER));
         }, seed.getYear(), seed.getMonthValue() - 1, seed.getDayOfMonth()).show();
     }
 
@@ -182,6 +216,7 @@ public class AddEditActivity extends AppCompatActivity {
         product.quantity = quantity;
         product.unit = unit;
         product.expiryDate = selectedExpiryDate;
+        product.openDate = selectedOpenDate;
         product.barcode = barcode.isEmpty() ? null : barcode;
 
         viewModel.save(product);

@@ -45,6 +45,7 @@ public class ProductListAdapter extends ListAdapter<Product, ProductListAdapter.
                     && oldItem.quantity == newItem.quantity
                     && oldItem.unit.equals(newItem.unit)
                     && oldItem.expiryDate.equals(newItem.expiryDate)
+                    && Objects.equals(oldItem.openDate, newItem.openDate)
                     && Objects.equals(oldItem.barcode, newItem.barcode);
         }
     };
@@ -67,12 +68,14 @@ public class ProductListAdapter extends ListAdapter<Product, ProductListAdapter.
         private final TextView textName;
         private final TextView textDetails;
         private final TextView textExpiry;
+        private final TextView textOpenDate;
 
         ProductViewHolder(@NonNull View itemView) {
             super(itemView);
             textName = itemView.findViewById(R.id.text_name);
             textDetails = itemView.findViewById(R.id.text_details);
             textExpiry = itemView.findViewById(R.id.text_expiry);
+            textOpenDate = itemView.findViewById(R.id.text_open_date);
         }
 
         void bind(Product product, OnProductClickListener listener) {
@@ -98,6 +101,14 @@ public class ProductListAdapter extends ListAdapter<Product, ProductListAdapter.
             textExpiry.setText(itemView.getContext().getString(
                     R.string.item_expiry_format, product.expiryDate.format(DATE_FORMATTER), status));
             textExpiry.setTextColor(itemView.getContext().getColor(colorRes));
+
+            if (product.openDate != null) {
+                textOpenDate.setText(itemView.getContext().getString(
+                        R.string.item_open_date_format, product.openDate.format(DATE_FORMATTER)));
+                textOpenDate.setVisibility(View.VISIBLE);
+            } else {
+                textOpenDate.setVisibility(View.GONE);
+            }
 
             itemView.setOnClickListener(v -> listener.onProductClick(product));
         }
