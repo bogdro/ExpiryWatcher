@@ -44,6 +44,7 @@ public class ProductListAdapter extends ListAdapter<Product, ProductListAdapter.
                     && oldItem.type.equals(newItem.type)
                     && oldItem.quantity == newItem.quantity
                     && oldItem.unit.equals(newItem.unit)
+                    && Objects.equals(oldItem.container, newItem.container)
                     && oldItem.expiryDate.equals(newItem.expiryDate)
                     && Objects.equals(oldItem.openDate, newItem.openDate)
                     && Objects.equals(oldItem.barcode, newItem.barcode);
@@ -80,8 +81,13 @@ public class ProductListAdapter extends ListAdapter<Product, ProductListAdapter.
 
         void bind(Product product, OnProductClickListener listener) {
             textName.setText(product.name);
-            textDetails.setText(itemView.getContext().getString(
-                    R.string.item_details_format, product.type, product.quantity, product.unit));
+            if (product.container != null && !product.container.isEmpty()) {
+                textDetails.setText(itemView.getContext().getString(R.string.item_details_with_container_format,
+                        product.type, product.quantity, product.unit, product.container));
+            } else {
+                textDetails.setText(itemView.getContext().getString(
+                        R.string.item_details_format, product.type, product.quantity, product.unit));
+            }
 
             long daysLeft = product.expiryDate.toEpochDay() - LocalDate.now().toEpochDay();
 

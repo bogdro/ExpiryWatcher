@@ -17,6 +17,7 @@
     <string name="status_expires_today">Expires today</string>
     <string name="status_days_left">%1$d days left</string>
     <string name="item_details_format">%1$s · %2$d %3$s</string>
+    <string name="item_details_with_container_format">%1$s · %2$d %3$s · %4$s</string>
     <string name="item_expiry_format">Expires %1$s · %2$s</string>
     <string name="item_open_date_format">Opened %1$s</string>
 
