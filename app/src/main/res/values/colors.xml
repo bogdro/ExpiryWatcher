@@ -11,4 +11,10 @@
 
     <color name="background_light">#FAFAFA</color>
     <color name="background_dark">#121212</color>
+
+    <!-- Product list card backgrounds by expiry status. Dark-mode equivalents are in
+         values-night/colors.xml: same red/yellow/green pattern, muted for a dark surface. -->
+    <color name="card_expired">#FFCDD2</color>
+    <color name="card_near_expiry">#FFE0B2</color>
+    <color name="card_fresh">#C8E6C9</color>
 </resources>

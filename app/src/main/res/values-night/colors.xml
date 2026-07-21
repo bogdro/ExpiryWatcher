@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Muted/darker equivalents of the light-mode card colors in values/colors.xml, tuned to
+         sit on a dark surface instead of a light one, but following the same red/yellow/green
+         pattern. -->
+    <color name="card_expired">#5C2B29</color>
+    <color name="card_near_expiry">#5C4A22</color>
+    <color name="card_fresh">#24402B</color>
+
+    <!-- The light-mode expiry status text colors (values/colors.xml) were tuned for a neutral
+         dark surface, not the colored dark-mode cards above; brightened here so status text
+         stays legible against them. -->
+    <color name="status_expired">#FF8A80</color>
+    <color name="status_soon">#FFCC80</color>
+    <color name="status_ok">#E0E0E0</color>
+</resources>

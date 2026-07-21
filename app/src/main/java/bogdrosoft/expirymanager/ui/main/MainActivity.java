@@ -13,6 +13,9 @@ import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import bogdrosoft.expirymanager.R;
 import bogdrosoft.expirymanager.data.entity.Product;
 import bogdrosoft.expirymanager.databinding.ActivityMainBinding;
@@ -23,12 +26,15 @@ import bogdrosoft.expirymanager.ui.containers.ManageContainersActivity;
 import bogdrosoft.expirymanager.ui.settings.SettingsActivity;
 import bogdrosoft.expirymanager.ui.types.ManageTypesActivity;
 import bogdrosoft.expirymanager.util.Constants;
+import bogdrosoft.expirymanager.util.SharedPrefsHelper;
 
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private MainViewModel viewModel;
     private DbImportManager importManager;
+    private ProductListAdapter adapter;
+    private Map<String, Integer> typeLeadTimeOverrides = new HashMap<>();
     private boolean searchActive;
 
     private final ActivityResultLauncher<String[]> openDocumentLauncher =
@@ -45,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
         importManager = new DbImportManager(this);
 
-        ProductListAdapter adapter = new ProductListAdapter(this::onProductClicked);
+        adapter = new ProductListAdapter(this::onProductClicked);
         binding.recyclerProducts.setLayoutManager(new LinearLayoutManager(this));
         binding.recyclerProducts.setAdapter(adapter);
 
@@ -56,11 +62,23 @@ public class MainActivity extends AppCompatActivity {
             binding.textEmpty.setText(searchActive ? R.string.empty_search_message : R.string.empty_list_message);
             binding.textEmpty.setVisibility(empty ? android.view.View.VISIBLE : android.view.View.GONE);
         });
+        viewModel.getTypeLeadTimeOverrides().observe(this, overrides -> {
+            typeLeadTimeOverrides = overrides;
+            adapter.setLeadTimeSettings(typeLeadTimeOverrides, SharedPrefsHelper.getLeadTimeDays(this));
+        });
 
         binding.fabAdd.setOnClickListener(v -> {
             Intent intent = new Intent(this, AddEditActivity.class);
             startActivity(intent);
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // The global default lead time lives in plain SharedPreferences (not LiveData-backed),
+        // so pick up any change made in Settings since we were last visible.
+        adapter.setLeadTimeSettings(typeLeadTimeOverrides, SharedPrefsHelper.getLeadTimeDays(this));
     }
 
     private void onProductClicked(Product product) {
