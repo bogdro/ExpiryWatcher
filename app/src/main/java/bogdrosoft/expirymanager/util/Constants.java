@@ -21,6 +21,8 @@ public final class Constants {
     public static final boolean DEFAULT_NOTIFY_EXPIRED_ENABLED = true;
     public static final String PREF_NOTIFY_EXPIRING_SOON_ENABLED = "notify_expiring_soon_enabled";
     public static final boolean DEFAULT_NOTIFY_EXPIRING_SOON_ENABLED = true;
+    public static final String PREF_HIDE_EXHAUSTED_PRODUCTS = "hide_exhausted_products";
+    public static final boolean DEFAULT_HIDE_EXHAUSTED_PRODUCTS = false;
 
     public static final String NOTIFICATION_CHANNEL_ID = "expiry_reminders";
     public static final int NOTIFICATION_ID_EXPIRED_SUMMARY = 1001;

@@ -69,6 +69,8 @@
     <string name="pref_notify_expiring_soon_summary">Get a separate notification for products expiring within the reminder period</string>
     <string name="pref_scan_sound_title">Scan sound</string>
     <string name="pref_scan_sound_summary">Play a beep when a barcode is scanned successfully</string>
+    <string name="pref_hide_exhausted_title">Hide exhausted products</string>
+    <string name="pref_hide_exhausted_summary">Hide products with 0 units left from the main list</string>
 
     <!-- Notifications -->
     <string name="notification_channel_name">Expiry reminders</string>

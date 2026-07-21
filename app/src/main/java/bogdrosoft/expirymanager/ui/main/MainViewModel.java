@@ -15,17 +15,33 @@ import java.util.Map;
 import bogdrosoft.expirymanager.data.entity.Product;
 import bogdrosoft.expirymanager.data.entity.ProductType;
 import bogdrosoft.expirymanager.repository.ProductRepository;
+import bogdrosoft.expirymanager.util.SharedPrefsHelper;
 
 public class MainViewModel extends AndroidViewModel {
 
     private final ProductRepository repository;
-    private final MutableLiveData<String> searchQuery = new MutableLiveData<>("");
+    // Bundles the search text and the "hide exhausted" setting together so both can drive the
+    // same switchMap: the setting lives in plain SharedPreferences (not its own LiveData), so
+    // MainActivity pushes its current value in here on every resume, same as it already does
+    // for the lead-time-based list coloring.
+    private final MutableLiveData<Filter> filter;
     private final LiveData<List<Product>> products;
+
+    private static final class Filter {
+        final String query;
+        final boolean hideExhausted;
+
+        Filter(String query, boolean hideExhausted) {
+            this.query = query;
+            this.hideExhausted = hideExhausted;
+        }
+    }
 
     public MainViewModel(@NonNull Application application) {
         super(application);
         repository = new ProductRepository(application);
-        products = Transformations.switchMap(searchQuery, repository::searchProducts);
+        filter = new MutableLiveData<>(new Filter("", SharedPrefsHelper.isHideExhaustedProductsEnabled(application)));
+        products = Transformations.switchMap(filter, f -> repository.searchProducts(f.query, f.hideExhausted));
     }
 
     public LiveData<List<Product>> getProducts() {
@@ -33,7 +49,22 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public void setSearchQuery(String query) {
-        searchQuery.setValue(query == null ? "" : query);
+        Filter current = filter.getValue();
+        boolean hideExhausted = current != null && current.hideExhausted;
+        filter.setValue(new Filter(query == null ? "" : query, hideExhausted));
+    }
+
+    /**
+     * Called from {@code MainActivity.onResume()}, since the setting itself lives in plain
+     * SharedPreferences rather than something this ViewModel can observe on its own.
+     */
+    public void setHideExhausted(boolean hideExhausted) {
+        Filter current = filter.getValue();
+        String query = current != null ? current.query : "";
+        if (current != null && current.hideExhausted == hideExhausted) {
+            return;
+        }
+        filter.setValue(new Filter(query, hideExhausted));
     }
 
     public void deleteProduct(Product product) {

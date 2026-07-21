@@ -39,6 +39,7 @@ public class SettingsActivity extends AppCompatActivity {
         binding.switchScanSound.setChecked(SharedPrefsHelper.isScanSoundEnabled(this));
         binding.switchNotifyExpired.setChecked(SharedPrefsHelper.isNotifyExpiredEnabled(this));
         binding.switchNotifyExpiringSoon.setChecked(SharedPrefsHelper.isNotifyExpiringSoonEnabled(this));
+        binding.switchHideExhausted.setChecked(SharedPrefsHelper.isHideExhaustedProductsEnabled(this));
         updateReminderTimeButtonText();
 
         binding.buttonSaveLeadTime.setOnClickListener(v -> saveLeadTime());
@@ -58,6 +59,8 @@ public class SettingsActivity extends AppCompatActivity {
                 NotificationHelper.cancelExpiringSoonSummary(this);
             }
         });
+        binding.switchHideExhausted.setOnCheckedChangeListener((buttonView, isChecked) ->
+                SharedPrefsHelper.setHideExhaustedProductsEnabled(this, isChecked));
     }
 
     @Override

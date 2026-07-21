@@ -55,6 +55,14 @@ public final class SharedPrefsHelper {
         prefs(context).edit().putBoolean(Constants.PREF_NOTIFY_EXPIRING_SOON_ENABLED, enabled).apply();
     }
 
+    public static boolean isHideExhaustedProductsEnabled(Context context) {
+        return prefs(context).getBoolean(Constants.PREF_HIDE_EXHAUSTED_PRODUCTS, Constants.DEFAULT_HIDE_EXHAUSTED_PRODUCTS);
+    }
+
+    public static void setHideExhaustedProductsEnabled(Context context, boolean enabled) {
+        prefs(context).edit().putBoolean(Constants.PREF_HIDE_EXHAUSTED_PRODUCTS, enabled).apply();
+    }
+
     private static SharedPreferences prefs(Context context) {
         return context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
     }

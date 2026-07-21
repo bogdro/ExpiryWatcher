@@ -19,10 +19,12 @@ public interface ProductDao {
     // case-insensitive for ASCII, which covers the "case-insensitive" requirement here.
     // "quantity = 0" evaluates to 0/1 in SQLite, so ordering by it first pushes exhausted
     // products to the bottom regardless of expiry date, while both groups are still
-    // sorted by expiry date within themselves.
+    // sorted by expiry date within themselves. hideExhausted is bound as 0/1 too, so
+    // "hideExhausted = 0" short-circuits the quantity check when the setting is off.
     @Query("SELECT * FROM products WHERE (:query = '' OR name LIKE '%' || :query || '%') "
+            + "AND (:hideExhausted = 0 OR quantity != 0) "
             + "ORDER BY (quantity = 0) ASC, expiry_date ASC")
-    LiveData<List<Product>> searchByName(String query);
+    LiveData<List<Product>> searchByName(String query, boolean hideExhausted);
 
     // Synchronous twin of searchByName(""): used by ExpiryCheckWorker, which needs to
     // filter by each product's own effective (possibly type-overridden) lead time rather than

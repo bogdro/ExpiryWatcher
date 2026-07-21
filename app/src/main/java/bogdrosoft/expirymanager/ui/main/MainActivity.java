@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         // The global default lead time lives in plain SharedPreferences (not LiveData-backed),
         // so pick up any change made in Settings since we were last visible.
         adapter.setLeadTimeSettings(typeLeadTimeOverrides, SharedPrefsHelper.getLeadTimeDays(this));
+        viewModel.setHideExhausted(SharedPrefsHelper.isHideExhaustedProductsEnabled(this));
     }
 
     private void onProductClicked(Product product) {

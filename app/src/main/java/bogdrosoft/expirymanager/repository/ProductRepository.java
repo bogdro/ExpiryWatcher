@@ -45,8 +45,8 @@ public class ProductRepository {
         this.containerDao = db.containerDao();
     }
 
-    public LiveData<List<Product>> searchProducts(String query) {
-        return productDao.searchByName(query == null ? "" : query);
+    public LiveData<List<Product>> searchProducts(String query, boolean hideExhausted) {
+        return productDao.searchByName(query == null ? "" : query, hideExhausted);
     }
 
     public LiveData<Product> getProduct(long id) {
