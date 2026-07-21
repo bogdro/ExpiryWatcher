@@ -36,8 +36,34 @@ public final class NotificationHelper {
         manager.createNotificationChannel(channel);
     }
 
-    public static void showExpirySummary(Context context, List<Product> expiringProducts) {
-        if (expiringProducts.isEmpty() || !NotificationManagerCompat.from(context).areNotificationsEnabled()) {
+    public static void showExpiredSummary(Context context, List<Product> expiredProducts) {
+        showSummary(context, expiredProducts, Constants.NOTIFICATION_ID_EXPIRED_SUMMARY,
+                R.string.notification_title_expired_single, R.string.notification_title_expired_plural);
+    }
+
+    public static void cancelExpiredSummary(Context context) {
+        NotificationManagerCompat.from(context).cancel(Constants.NOTIFICATION_ID_EXPIRED_SUMMARY);
+    }
+
+    public static void showExpiringSoonSummary(Context context, List<Product> expiringSoonProducts) {
+        showSummary(context, expiringSoonProducts, Constants.NOTIFICATION_ID_EXPIRING_SOON_SUMMARY,
+                R.string.notification_title_expiring_soon_single, R.string.notification_title_expiring_soon_plural);
+    }
+
+    public static void cancelExpiringSoonSummary(Context context) {
+        NotificationManagerCompat.from(context).cancel(Constants.NOTIFICATION_ID_EXPIRING_SOON_SUMMARY);
+    }
+
+    // Shared by both categories: an empty list cancels any previously-shown notification for
+    // this id instead of leaving a stale one in the shade (e.g. the last expired product was
+    // just deleted, or the user turned the category off after one was already posted).
+    private static void showSummary(Context context, List<Product> products, int notificationId,
+            int titleSingleRes, int titlePluralRes) {
+        if (products.isEmpty()) {
+            NotificationManagerCompat.from(context).cancel(notificationId);
+            return;
+        }
+        if (!NotificationManagerCompat.from(context).areNotificationsEnabled()) {
             return;
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
@@ -52,18 +78,18 @@ public final class NotificationHelper {
                 context, 0, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle();
-        int shown = Math.min(expiringProducts.size(), 5);
+        int shown = Math.min(products.size(), 5);
         for (int i = 0; i < shown; i++) {
-            style.addLine(expiringProducts.get(i).name);
+            style.addLine(products.get(i).name);
         }
-        if (expiringProducts.size() > shown) {
-            style.setSummaryText(context.getString(R.string.notification_more_items, expiringProducts.size() - shown));
+        if (products.size() > shown) {
+            style.setSummaryText(context.getString(R.string.notification_more_items, products.size() - shown));
         }
 
-        int count = expiringProducts.size();
+        int count = products.size();
         String title = count == 1
-                ? context.getString(R.string.notification_title_single, count)
-                : context.getString(R.string.notification_title_plural, count);
+                ? context.getString(titleSingleRes, count)
+                : context.getString(titlePluralRes, count);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, Constants.NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
@@ -73,6 +99,6 @@ public final class NotificationHelper {
                 .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
-        NotificationManagerCompat.from(context).notify(Constants.NOTIFICATION_ID_EXPIRY_SUMMARY, builder.build());
+        NotificationManagerCompat.from(context).notify(notificationId, builder.build());
     }
 }

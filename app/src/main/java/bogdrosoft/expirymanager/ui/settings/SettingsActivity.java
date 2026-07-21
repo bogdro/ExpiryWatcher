@@ -16,6 +16,7 @@ import java.util.Locale;
 
 import bogdrosoft.expirymanager.R;
 import bogdrosoft.expirymanager.databinding.ActivitySettingsBinding;
+import bogdrosoft.expirymanager.reminder.NotificationHelper;
 import bogdrosoft.expirymanager.reminder.ReminderScheduler;
 import bogdrosoft.expirymanager.util.SharedPrefsHelper;
 
@@ -36,6 +37,8 @@ public class SettingsActivity extends AppCompatActivity {
 
         binding.editLeadTime.setText(String.valueOf(SharedPrefsHelper.getLeadTimeDays(this)));
         binding.switchScanSound.setChecked(SharedPrefsHelper.isScanSoundEnabled(this));
+        binding.switchNotifyExpired.setChecked(SharedPrefsHelper.isNotifyExpiredEnabled(this));
+        binding.switchNotifyExpiringSoon.setChecked(SharedPrefsHelper.isNotifyExpiringSoonEnabled(this));
         updateReminderTimeButtonText();
 
         binding.buttonSaveLeadTime.setOnClickListener(v -> saveLeadTime());
@@ -43,6 +46,18 @@ public class SettingsActivity extends AppCompatActivity {
         binding.buttonOpenNotificationSettings.setOnClickListener(v -> openNotificationSettings());
         binding.switchScanSound.setOnCheckedChangeListener((buttonView, isChecked) ->
                 SharedPrefsHelper.setScanSoundEnabled(this, isChecked));
+        binding.switchNotifyExpired.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            SharedPrefsHelper.setNotifyExpiredEnabled(this, isChecked);
+            if (!isChecked) {
+                NotificationHelper.cancelExpiredSummary(this);
+            }
+        });
+        binding.switchNotifyExpiringSoon.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            SharedPrefsHelper.setNotifyExpiringSoonEnabled(this, isChecked);
+            if (!isChecked) {
+                NotificationHelper.cancelExpiringSoonSummary(this);
+            }
+        });
     }
 
     @Override

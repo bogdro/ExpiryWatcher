@@ -18,10 +18,11 @@ import bogdrosoft.expirymanager.data.entity.ProductType;
 import bogdrosoft.expirymanager.util.SharedPrefsHelper;
 
 /**
- * Runs roughly once a day (see {@link ReminderScheduler}) and posts a single summary
- * notification for products expiring within their effective lead time: a product type's own
- * override if it has one, otherwise the global default. There is no lower bound on the
- * comparison, so already-overdue items keep surfacing until deleted/renewed.
+ * Runs roughly once a day (see {@link ReminderScheduler}) and posts up to two summary
+ * notifications, one for already-overdue products and one for products expiring within their
+ * effective lead time (a product type's own override if it has one, otherwise the global
+ * default). Each category is independently toggleable in Settings; already-overdue items keep
+ * surfacing until deleted/renewed.
  */
 public class ExpiryCheckWorker extends Worker {
 
@@ -44,15 +45,30 @@ public class ExpiryCheckWorker extends Worker {
         }
 
         LocalDate today = LocalDate.now();
-        List<Product> expiring = new ArrayList<>();
+        List<Product> expired = new ArrayList<>();
+        List<Product> expiringSoon = new ArrayList<>();
         for (Product product : db.productDao().getAllSortedByExpirySync()) {
             int leadTimeDays = typeLeadTimeOverrides.getOrDefault(product.type, defaultLeadTimeDays);
-            if (product.expiryDate.toEpochDay() <= today.plusDays(leadTimeDays).toEpochDay()) {
-                expiring.add(product);
+            long daysLeft = product.expiryDate.toEpochDay() - today.toEpochDay();
+            if (daysLeft < 0) {
+                expired.add(product);
+            } else if (daysLeft <= leadTimeDays) {
+                expiringSoon.add(product);
             }
         }
 
-        NotificationHelper.showExpirySummary(context, expiring);
+        if (SharedPrefsHelper.isNotifyExpiredEnabled(context)) {
+            NotificationHelper.showExpiredSummary(context, expired);
+        } else {
+            NotificationHelper.cancelExpiredSummary(context);
+        }
+
+        if (SharedPrefsHelper.isNotifyExpiringSoonEnabled(context)) {
+            NotificationHelper.showExpiringSoonSummary(context, expiringSoon);
+        } else {
+            NotificationHelper.cancelExpiringSoonSummary(context);
+        }
+
         return Result.success();
     }
 }

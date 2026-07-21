@@ -39,6 +39,22 @@ public final class SharedPrefsHelper {
         prefs(context).edit().putBoolean(Constants.PREF_SCAN_SOUND_ENABLED, enabled).apply();
     }
 
+    public static boolean isNotifyExpiredEnabled(Context context) {
+        return prefs(context).getBoolean(Constants.PREF_NOTIFY_EXPIRED_ENABLED, Constants.DEFAULT_NOTIFY_EXPIRED_ENABLED);
+    }
+
+    public static void setNotifyExpiredEnabled(Context context, boolean enabled) {
+        prefs(context).edit().putBoolean(Constants.PREF_NOTIFY_EXPIRED_ENABLED, enabled).apply();
+    }
+
+    public static boolean isNotifyExpiringSoonEnabled(Context context) {
+        return prefs(context).getBoolean(Constants.PREF_NOTIFY_EXPIRING_SOON_ENABLED, Constants.DEFAULT_NOTIFY_EXPIRING_SOON_ENABLED);
+    }
+
+    public static void setNotifyExpiringSoonEnabled(Context context, boolean enabled) {
+        prefs(context).edit().putBoolean(Constants.PREF_NOTIFY_EXPIRING_SOON_ENABLED, enabled).apply();
+    }
+
     private static SharedPreferences prefs(Context context) {
         return context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
     }

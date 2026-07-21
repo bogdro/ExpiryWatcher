@@ -63,14 +63,20 @@
     <string name="pref_reminder_time_summary">The daily expiry check notification will be sent around this time</string>
     <string name="pref_notifications_title">Enable notifications</string>
     <string name="pref_notifications_summary">Notifications are currently disabled in system settings</string>
+    <string name="pref_notify_expired_title">Notify about expired products</string>
+    <string name="pref_notify_expired_summary">Get a separate notification for products already past their expiry date</string>
+    <string name="pref_notify_expiring_soon_title">Notify about upcoming expiry</string>
+    <string name="pref_notify_expiring_soon_summary">Get a separate notification for products expiring within the reminder period</string>
     <string name="pref_scan_sound_title">Scan sound</string>
     <string name="pref_scan_sound_summary">Play a beep when a barcode is scanned successfully</string>
 
     <!-- Notifications -->
     <string name="notification_channel_name">Expiry reminders</string>
-    <string name="notification_channel_description">Alerts for products that are expiring soon</string>
-    <string name="notification_title_single">%1$d product expiring soon</string>
-    <string name="notification_title_plural">%1$d products expiring soon</string>
+    <string name="notification_channel_description">Alerts for products that are expired or expiring soon</string>
+    <string name="notification_title_expiring_soon_single">%1$d product expiring soon</string>
+    <string name="notification_title_expiring_soon_plural">%1$d products expiring soon</string>
+    <string name="notification_title_expired_single">%1$d product expired</string>
+    <string name="notification_title_expired_plural">%1$d products expired</string>
     <string name="notification_more_items">+%1$d more</string>
 
     <!-- Manage types -->

@@ -17,9 +17,14 @@ public final class Constants {
     public static final String PREF_ASKED_NOTIFICATION_PERMISSION = "asked_notification_permission";
     public static final String PREF_SCAN_SOUND_ENABLED = "scan_sound_enabled";
     public static final boolean DEFAULT_SCAN_SOUND_ENABLED = true;
+    public static final String PREF_NOTIFY_EXPIRED_ENABLED = "notify_expired_enabled";
+    public static final boolean DEFAULT_NOTIFY_EXPIRED_ENABLED = true;
+    public static final String PREF_NOTIFY_EXPIRING_SOON_ENABLED = "notify_expiring_soon_enabled";
+    public static final boolean DEFAULT_NOTIFY_EXPIRING_SOON_ENABLED = true;
 
     public static final String NOTIFICATION_CHANNEL_ID = "expiry_reminders";
-    public static final int NOTIFICATION_ID_EXPIRY_SUMMARY = 1001;
+    public static final int NOTIFICATION_ID_EXPIRED_SUMMARY = 1001;
+    public static final int NOTIFICATION_ID_EXPIRING_SOON_SUMMARY = 1002;
 
     public static final String WORK_NAME_EXPIRY_CHECK = "expiry-check";
 
