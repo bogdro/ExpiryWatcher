@@ -30,6 +30,7 @@
     <string name="label_open_date">Open date (optional)</string>
     <string name="label_barcode">Barcode</string>
     <string name="action_scan_barcode">Scan barcode</string>
+    <string name="action_clear_open_date">Clear open date</string>
     <string name="action_save">Save</string>
     <string name="action_delete">Delete</string>
     <string name="error_name_required">Name is required</string>

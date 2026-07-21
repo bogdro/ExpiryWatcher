@@ -87,6 +87,15 @@ public class AddEditActivity extends AppCompatActivity {
 
         binding.editExpiryDate.setOnClickListener(v -> showDatePicker());
         binding.editOpenDate.setOnClickListener(v -> showOpenDatePicker());
+        // The layout's built-in "clear_text" end icon only shows itself once the EditText has
+        // focus, but edit_open_date is non-focusable (it opens a date picker on click instead of
+        // a keyboard), so that icon would never appear. Using a custom end icon instead, with its
+        // visibility driven manually from the field's text content.
+        binding.layoutOpenDate.setEndIconVisible(false);
+        binding.layoutOpenDate.setEndIconOnClickListener(v -> {
+            selectedOpenDate = null;
+            binding.editOpenDate.setText("");
+        });
         binding.editOpenDate.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -98,11 +107,12 @@ public class AddEditActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                // Catches the field being cleared via the layout's clear-text end icon,
-                // since that doesn't go through showOpenDatePicker().
+                // Also catches the field being cleared via the end icon itself, since that
+                // doesn't go through showOpenDatePicker().
                 if (s.length() == 0) {
                     selectedOpenDate = null;
                 }
+                binding.layoutOpenDate.setEndIconVisible(s.length() > 0);
             }
         });
         binding.buttonScan.setOnClickListener(v -> {
