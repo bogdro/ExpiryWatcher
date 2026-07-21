@@ -48,6 +48,11 @@ public class ExpiryCheckWorker extends Worker {
         List<Product> expired = new ArrayList<>();
         List<Product> expiringSoon = new ArrayList<>();
         for (Product product : db.productDao().getAllSortedByExpirySync()) {
+            if (product.quantity == 0) {
+                // Exhausted: nothing left to use or throw out, so it's no longer relevant to
+                // either reminder category regardless of its expiry date.
+                continue;
+            }
             int leadTimeDays = typeLeadTimeOverrides.getOrDefault(product.type, defaultLeadTimeDays);
             long daysLeft = product.expiryDate.toEpochDay() - today.toEpochDay();
             if (daysLeft < 0) {
