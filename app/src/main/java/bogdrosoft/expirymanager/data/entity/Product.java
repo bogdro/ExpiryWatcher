@@ -35,6 +35,11 @@ public class Product {
     @Nullable
     public LocalDate openDate;
 
+    // Where the product is stored (e.g. "Fridge", "Pantry"), from the user-managed Container
+    // list. Optional and empty by default.
+    @Nullable
+    public String container;
+
     @Nullable
     public String barcode;
 

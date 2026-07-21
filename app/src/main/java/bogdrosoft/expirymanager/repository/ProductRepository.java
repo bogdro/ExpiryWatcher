@@ -13,9 +13,11 @@ import java.util.List;
 
 import bogdrosoft.expirymanager.data.AppDatabase;
 import bogdrosoft.expirymanager.data.dao.BarcodeDefaultsDao;
+import bogdrosoft.expirymanager.data.dao.ContainerDao;
 import bogdrosoft.expirymanager.data.dao.ProductDao;
 import bogdrosoft.expirymanager.data.dao.ProductTypeDao;
 import bogdrosoft.expirymanager.data.entity.BarcodeDefaults;
+import bogdrosoft.expirymanager.data.entity.Container;
 import bogdrosoft.expirymanager.data.entity.Product;
 import bogdrosoft.expirymanager.data.entity.ProductType;
 
@@ -32,6 +34,7 @@ public class ProductRepository {
     private final ProductDao productDao;
     private final BarcodeDefaultsDao barcodeDefaultsDao;
     private final ProductTypeDao productTypeDao;
+    private final ContainerDao containerDao;
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     public ProductRepository(@NonNull Context context) {
@@ -39,6 +42,7 @@ public class ProductRepository {
         this.productDao = db.productDao();
         this.barcodeDefaultsDao = db.barcodeDefaultsDao();
         this.productTypeDao = db.productTypeDao();
+        this.containerDao = db.containerDao();
     }
 
     public LiveData<List<Product>> searchProducts(String query) {
@@ -112,5 +116,31 @@ public class ProductRepository {
 
     public void deleteType(ProductType type) {
         AppDatabase.databaseWriteExecutor.execute(() -> productTypeDao.delete(type));
+    }
+
+    public LiveData<List<Container>> getAllContainers() {
+        return containerDao.getAllSorted();
+    }
+
+    /**
+     * @param callback delivered {@code true} on success, {@code false} if a container with
+     *                 this name already exists (name is the primary key).
+     */
+    public void addContainer(Container container, Callback<Boolean> callback) {
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            boolean success;
+            try {
+                containerDao.insert(container);
+                success = true;
+            } catch (SQLiteConstraintException e) {
+                success = false;
+            }
+            boolean result = success;
+            mainHandler.post(() -> callback.onResult(result));
+        });
+    }
+
+    public void deleteContainer(Container container) {
+        AppDatabase.databaseWriteExecutor.execute(() -> containerDao.delete(container));
     }
 }

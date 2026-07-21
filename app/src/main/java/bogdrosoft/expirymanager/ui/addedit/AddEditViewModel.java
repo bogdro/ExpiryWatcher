@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bogdrosoft.expirymanager.data.entity.BarcodeDefaults;
+import bogdrosoft.expirymanager.data.entity.Container;
 import bogdrosoft.expirymanager.data.entity.Product;
 import bogdrosoft.expirymanager.data.entity.ProductType;
 import bogdrosoft.expirymanager.repository.ProductRepository;
@@ -52,6 +53,16 @@ public class AddEditViewModel extends AndroidViewModel {
             List<String> names = new ArrayList<>();
             for (ProductType type : types) {
                 names.add(type.name);
+            }
+            return names;
+        });
+    }
+
+    public LiveData<List<String>> getContainerNames() {
+        return Transformations.map(repository.getAllContainers(), containers -> {
+            List<String> names = new ArrayList<>();
+            for (Container container : containers) {
+                names.add(container.name);
             }
             return names;
         });

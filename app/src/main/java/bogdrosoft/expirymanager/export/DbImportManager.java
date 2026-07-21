@@ -93,12 +93,13 @@ public class DbImportManager {
                 }
             }
             if (!tables.contains("products") || !tables.contains("barcode_defaults")
-                    || !tables.contains("product_types")) {
+                    || !tables.contains("product_types") || !tables.contains("containers")) {
                 return false;
             }
-            return hasColumns(db, "products", "id", "name", "expiry_date", "open_date", "barcode")
+            return hasColumns(db, "products", "id", "name", "expiry_date", "open_date", "container", "barcode")
                     && hasColumns(db, "barcode_defaults", "barcode", "name", "quantity", "unit")
-                    && hasColumns(db, "product_types", "name", "lead_time_days");
+                    && hasColumns(db, "product_types", "name", "lead_time_days")
+                    && hasColumns(db, "containers", "name");
         } catch (SQLiteException e) {
             return false;
         }

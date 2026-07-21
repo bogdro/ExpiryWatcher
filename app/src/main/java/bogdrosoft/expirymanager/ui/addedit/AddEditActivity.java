@@ -76,6 +76,14 @@ public class AddEditActivity extends AppCompatActivity {
             typeAdapter.notifyDataSetChanged();
         });
 
+        ArrayAdapter<String> containerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new ArrayList<>());
+        binding.editContainer.setAdapter(containerAdapter);
+        viewModel.getContainerNames().observe(this, names -> {
+            containerAdapter.clear();
+            containerAdapter.addAll(names);
+            containerAdapter.notifyDataSetChanged();
+        });
+
         productId = getIntent().getLongExtra(Constants.EXTRA_PRODUCT_ID, Constants.NO_PRODUCT_ID);
         if (productId == Constants.NO_PRODUCT_ID) {
             setTitle(R.string.title_add_product);
@@ -115,6 +123,25 @@ public class AddEditActivity extends AppCompatActivity {
                 binding.layoutOpenDate.setEndIconVisible(s.length() > 0);
             }
         });
+        // The container field uses the same read-only exposed-dropdown pattern as the type
+        // field (its own dropdown_menu end icon handles opening it on tap), with a start icon
+        // added specifically for clearing it back to empty, since a container is optional.
+        binding.layoutContainer.setStartIconVisible(false);
+        binding.layoutContainer.setStartIconOnClickListener(v -> binding.editContainer.setText(""));
+        binding.editContainer.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                binding.layoutContainer.setStartIconVisible(s.length() > 0);
+            }
+        });
         binding.buttonScan.setOnClickListener(v -> {
             hideKeyboardAndClearFocus();
             scanHelper.startScan();
@@ -148,6 +175,7 @@ public class AddEditActivity extends AppCompatActivity {
         binding.editType.setText(product.type, false);
         binding.editQuantity.setText(String.valueOf(product.quantity));
         binding.editUnit.setText(product.unit, false);
+        binding.editContainer.setText(product.container != null ? product.container : "", false);
         binding.editBarcode.setText(product.barcode);
         selectedExpiryDate = product.expiryDate;
         binding.editExpiryDate.setText(product.expiryDate.format(DATE_FORMATTER));
@@ -193,6 +221,7 @@ public class AddEditActivity extends AppCompatActivity {
         String name = text(binding.editName);
         String type = text(binding.editType);
         String unit = text(binding.editUnit);
+        String container = text(binding.editContainer);
         String quantityText = text(binding.editQuantity);
         String barcode = text(binding.editBarcode);
 
@@ -225,6 +254,7 @@ public class AddEditActivity extends AppCompatActivity {
         product.type = type;
         product.quantity = quantity;
         product.unit = unit;
+        product.container = container.isEmpty() ? null : container;
         product.expiryDate = selectedExpiryDate;
         product.openDate = selectedOpenDate;
         product.barcode = barcode.isEmpty() ? null : barcode;

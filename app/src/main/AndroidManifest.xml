@@ -40,6 +40,10 @@
             android:exported="false" />
 
         <activity
+            android:name=".ui.containers.ManageContainersActivity"
+            android:exported="false" />
+
+        <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="fullSensor"
             android:exported="false"

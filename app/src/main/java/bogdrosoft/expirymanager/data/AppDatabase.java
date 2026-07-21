@@ -15,14 +15,16 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import bogdrosoft.expirymanager.data.dao.BarcodeDefaultsDao;
+import bogdrosoft.expirymanager.data.dao.ContainerDao;
 import bogdrosoft.expirymanager.data.dao.ProductDao;
 import bogdrosoft.expirymanager.data.dao.ProductTypeDao;
 import bogdrosoft.expirymanager.data.entity.BarcodeDefaults;
+import bogdrosoft.expirymanager.data.entity.Container;
 import bogdrosoft.expirymanager.data.entity.Product;
 import bogdrosoft.expirymanager.data.entity.ProductType;
 import bogdrosoft.expirymanager.util.Constants;
 
-@Database(entities = {Product.class, BarcodeDefaults.class, ProductType.class}, version = 3, exportSchema = false)
+@Database(entities = {Product.class, BarcodeDefaults.class, ProductType.class, Container.class}, version = 4, exportSchema = false)
 @TypeConverters(Converters.class)
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -31,12 +33,15 @@ public abstract class AppDatabase extends RoomDatabase {
     public static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(2);
 
     private static final String[] DEFAULT_TYPE_NAMES = {"Grocery", "Medicine", "Dairy", "Household", "Other"};
+    private static final String[] DEFAULT_CONTAINER_NAMES = {"Fridge", "Freezer", "Pantry", "Medicine cabinet"};
 
     public abstract ProductDao productDao();
 
     public abstract BarcodeDefaultsDao barcodeDefaultsDao();
 
     public abstract ProductTypeDao productTypeDao();
+
+    public abstract ContainerDao containerDao();
 
     public static AppDatabase getInstance(@NonNull Context context) {
         if (instance == null) {
@@ -58,13 +63,25 @@ public abstract class AppDatabase extends RoomDatabase {
                 // No prior release to preserve data for; a schema bump just recreates the db.
                 .fallbackToDestructiveMigration()
                 .addCallback(new Callback() {
+                    // Seeding here (rather than onCreate()) is deliberate: onCreate() only fires
+                    // for a truly brand-new database file. fallbackToDestructiveMigration()'s
+                    // upgrade path drops and recreates tables on an *existing* file without going
+                    // through onCreate(), so an in-place app update would otherwise leave the new
+                    // product_types/containers tables empty. onOpen() fires every time (fresh
+                    // create, post-migration, and every normal open after that), and
+                    // CONFLICT_IGNORE makes re-running it on an already-seeded db a no-op.
                     @Override
-                    public void onCreate(@NonNull SupportSQLiteDatabase db) {
-                        super.onCreate(db);
+                    public void onOpen(@NonNull SupportSQLiteDatabase db) {
+                        super.onOpen(db);
                         for (String name : DEFAULT_TYPE_NAMES) {
                             ContentValues values = new ContentValues();
                             values.put("name", name);
                             db.insert("product_types", SQLiteDatabase.CONFLICT_IGNORE, values);
+                        }
+                        for (String name : DEFAULT_CONTAINER_NAMES) {
+                            ContentValues values = new ContentValues();
+                            values.put("name", name);
+                            db.insert("containers", SQLiteDatabase.CONFLICT_IGNORE, values);
                         }
                     }
                 })
