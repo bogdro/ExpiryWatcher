@@ -62,6 +62,7 @@ public class BarcodeScanHelper {
 
     private void launchScan() {
         ScanOptions options = new ScanOptions();
+        options.setCaptureActivity(BarcodeCaptureActivity.class);
         options.setDesiredBarcodeFormats(ScanOptions.ALL_CODE_TYPES);
         options.setBeepEnabled(SharedPrefsHelper.isScanSoundEnabled(activity));
         options.setOrientationLocked(false);

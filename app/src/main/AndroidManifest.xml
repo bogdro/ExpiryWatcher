@@ -44,10 +44,9 @@
             android:exported="false" />
 
         <activity
-            android:name="com.journeyapps.barcodescanner.CaptureActivity"
+            android:name=".scan.BarcodeCaptureActivity"
             android:screenOrientation="fullSensor"
-            android:exported="false"
-            tools:replace="screenOrientation" />
+            android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
