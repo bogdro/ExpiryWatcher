@@ -135,6 +135,13 @@ public class ProductListAdapter extends ListAdapter<Product, ProductListAdapter.
                 cardColorRes = R.color.card_fresh;
             }
 
+            // Exhausted products (0 units left) are sorted to the bottom regardless of expiry
+            // date; the card background reflects that grouping too, taking priority over the
+            // expiry-status color, while the status text/color still reports the real expiry.
+            if (product.quantity == 0) {
+                cardColorRes = R.color.card_exhausted;
+            }
+
             textExpiry.setText(itemView.getContext().getString(
                     R.string.item_expiry_format, product.expiryDate.format(DATE_FORMATTER), status));
             textExpiry.setTextColor(itemView.getContext().getColor(textColorRes));

@@ -17,4 +17,7 @@
     <color name="card_expired">#FFCDD2</color>
     <color name="card_near_expiry">#FFE0B2</color>
     <color name="card_fresh">#C8E6C9</color>
+    <!-- Exhausted (0 units left) overrides the expiry-status color above; neutral grey so it
+         reads as a distinct "used up" state rather than another expiry-urgency level. -->
+    <color name="card_exhausted">#E0E0E0</color>
 </resources>

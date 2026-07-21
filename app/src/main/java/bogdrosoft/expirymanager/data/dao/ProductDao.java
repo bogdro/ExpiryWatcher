@@ -17,7 +17,11 @@ public interface ProductDao {
     // An empty query matches everything, so the main list screen can use this same method
     // whether or not the user has typed a search term. SQLite's LIKE is already
     // case-insensitive for ASCII, which covers the "case-insensitive" requirement here.
-    @Query("SELECT * FROM products WHERE (:query = '' OR name LIKE '%' || :query || '%') ORDER BY expiry_date ASC")
+    // "quantity = 0" evaluates to 0/1 in SQLite, so ordering by it first pushes exhausted
+    // products to the bottom regardless of expiry date, while both groups are still
+    // sorted by expiry date within themselves.
+    @Query("SELECT * FROM products WHERE (:query = '' OR name LIKE '%' || :query || '%') "
+            + "ORDER BY (quantity = 0) ASC, expiry_date ASC")
     LiveData<List<Product>> searchByName(String query);
 
     // Synchronous twin of searchByName(""): used by ExpiryCheckWorker, which needs to

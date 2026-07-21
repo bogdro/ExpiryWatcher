@@ -6,6 +6,9 @@
     <color name="card_expired">#5C2B29</color>
     <color name="card_near_expiry">#5C4A22</color>
     <color name="card_fresh">#24402B</color>
+    <!-- Distinct from the app's near-black surface (#121212) and from the muted status colors
+         above, so an exhausted item still reads as its own neutral grey category. -->
+    <color name="card_exhausted">#424242</color>
 
     <!-- The light-mode expiry status text colors (values/colors.xml) were tuned for a neutral
          dark surface, not the colored dark-mode cards above; brightened here so status text
