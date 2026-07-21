@@ -19,6 +19,7 @@ import bogdrosoft.expirymanager.databinding.ActivityMainBinding;
 import bogdrosoft.expirymanager.export.DbExportManager;
 import bogdrosoft.expirymanager.export.DbImportManager;
 import bogdrosoft.expirymanager.ui.addedit.AddEditActivity;
+import bogdrosoft.expirymanager.ui.containers.ManageContainersActivity;
 import bogdrosoft.expirymanager.ui.settings.SettingsActivity;
 import bogdrosoft.expirymanager.ui.types.ManageTypesActivity;
 import bogdrosoft.expirymanager.util.Constants;
@@ -102,6 +103,9 @@ public class MainActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.action_manage_types) {
             startActivity(new Intent(this, ManageTypesActivity.class));
+            return true;
+        } else if (id == R.id.action_manage_containers) {
+            startActivity(new Intent(this, ManageContainersActivity.class));
             return true;
         } else if (id == R.id.action_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
