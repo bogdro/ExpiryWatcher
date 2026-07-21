@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private MainViewModel viewModel;
     private DbImportManager importManager;
+    private boolean searchActive;
 
     private final ActivityResultLauncher<String[]> openDocumentLauncher =
             registerForActivityResult(new ActivityResultContracts.OpenDocument(), this::onImportFilePicked);
@@ -50,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         viewModel.getProducts().observe(this, products -> {
             adapter.submitList(products);
             boolean empty = products == null || products.isEmpty();
+            binding.textEmpty.setText(searchActive ? R.string.empty_search_message : R.string.empty_list_message);
             binding.textEmpty.setVisibility(empty ? android.view.View.VISIBLE : android.view.View.GONE);
         });
 
@@ -68,6 +71,23 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setQueryHint(getString(R.string.search_hint));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                searchActive = newText != null && !newText.isEmpty();
+                viewModel.setSearchQuery(newText);
+                return true;
+            }
+        });
+
         return true;
     }
 

@@ -14,10 +14,13 @@ import bogdrosoft.expirymanager.data.entity.Product;
 @Dao
 public interface ProductDao {
 
-    @Query("SELECT * FROM products ORDER BY expiry_date ASC")
-    LiveData<List<Product>> getAllSortedByExpiry();
+    // An empty query matches everything, so the main list screen can use this same method
+    // whether or not the user has typed a search term. SQLite's LIKE is already
+    // case-insensitive for ASCII, which covers the "case-insensitive" requirement here.
+    @Query("SELECT * FROM products WHERE (:query = '' OR name LIKE '%' || :query || '%') ORDER BY expiry_date ASC")
+    LiveData<List<Product>> searchByName(String query);
 
-    // Synchronous twin of getAllSortedByExpiry(): used by ExpiryCheckWorker, which needs to
+    // Synchronous twin of searchByName(""): used by ExpiryCheckWorker, which needs to
     // filter by each product's own effective (possibly type-overridden) lead time rather than
     // a single SQL threshold, and by DAO tests where asserting on a LiveData emission would
     // otherwise need extra test-only infrastructure.

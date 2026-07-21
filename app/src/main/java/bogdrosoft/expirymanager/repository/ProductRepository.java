@@ -41,8 +41,8 @@ public class ProductRepository {
         this.productTypeDao = db.productTypeDao();
     }
 
-    public LiveData<List<Product>> getAllProducts() {
-        return productDao.getAllSortedByExpiry();
+    public LiveData<List<Product>> searchProducts(String query) {
+        return productDao.searchByName(query == null ? "" : query);
     }
 
     public LiveData<Product> getProduct(long id) {
