@@ -113,8 +113,14 @@ public class ManageTypesActivity extends AppCompatActivity {
         dialogBinding.layoutTypeLeadTime.setError(null);
 
         if (isEdit) {
-            existing.leadTimeDays = leadTimeDays;
-            viewModel.updateType(existing);
+            // A fresh instance, not a mutation of `existing`: that reference is the exact
+            // object the adapter's currently-displayed list is holding, and mutating it in
+            // place would corrupt the "old" snapshot DiffUtil later compares the refreshed
+            // Room query result against, making it see no change and skip re-binding the row.
+            ProductType updated = new ProductType();
+            updated.name = existing.name;
+            updated.leadTimeDays = leadTimeDays;
+            viewModel.updateType(updated);
             dialog.dismiss();
             return;
         }
