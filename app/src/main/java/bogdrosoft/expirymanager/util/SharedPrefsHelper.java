@@ -16,6 +16,21 @@ public final class SharedPrefsHelper {
         prefs(context).edit().putInt(Constants.PREF_LEAD_TIME_DAYS, days).apply();
     }
 
+    public static int getReminderHour(Context context) {
+        return prefs(context).getInt(Constants.PREF_REMINDER_HOUR, Constants.DEFAULT_REMINDER_HOUR);
+    }
+
+    public static int getReminderMinute(Context context) {
+        return prefs(context).getInt(Constants.PREF_REMINDER_MINUTE, Constants.DEFAULT_REMINDER_MINUTE);
+    }
+
+    public static void setReminderTime(Context context, int hour, int minute) {
+        prefs(context).edit()
+                .putInt(Constants.PREF_REMINDER_HOUR, hour)
+                .putInt(Constants.PREF_REMINDER_MINUTE, minute)
+                .apply();
+    }
+
     public static boolean isScanSoundEnabled(Context context) {
         return prefs(context).getBoolean(Constants.PREF_SCAN_SOUND_ENABLED, Constants.DEFAULT_SCAN_SOUND_ENABLED);
     }
