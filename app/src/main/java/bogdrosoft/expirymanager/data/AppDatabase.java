@@ -24,7 +24,7 @@ import bogdrosoft.expirymanager.data.entity.Product;
 import bogdrosoft.expirymanager.data.entity.ProductType;
 import bogdrosoft.expirymanager.util.Constants;
 
-@Database(entities = {Product.class, BarcodeDefaults.class, ProductType.class, Container.class}, version = 4, exportSchema = false)
+@Database(entities = {Product.class, BarcodeDefaults.class, ProductType.class, Container.class}, version = 5, exportSchema = false)
 @TypeConverters(Converters.class)
 public abstract class AppDatabase extends RoomDatabase {
 

@@ -4,11 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.time.LocalDate;
 
-@Entity(tableName = "products")
+// Indexed on expiry_date (the main list's sort column) and name (the search column).
+@Entity(tableName = "products", indices = {@Index("expiry_date"), @Index("name")})
 public class Product {
 
     @PrimaryKey(autoGenerate = true)
