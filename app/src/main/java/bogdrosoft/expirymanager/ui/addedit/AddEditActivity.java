@@ -2,6 +2,7 @@ package bogdrosoft.expirymanager.ui.addedit;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -88,6 +89,10 @@ public class AddEditActivity extends AppCompatActivity {
         if (productId == Constants.NO_PRODUCT_ID) {
             setTitle(R.string.title_add_product);
             selectedExpiryDate = null;
+            long duplicateFromId = getIntent().getLongExtra(Constants.EXTRA_DUPLICATE_FROM_ID, Constants.NO_PRODUCT_ID);
+            if (duplicateFromId != Constants.NO_PRODUCT_ID) {
+                viewModel.loadProductForDuplicate(duplicateFromId).observe(this, this::populateFieldsForDuplicate);
+            }
         } else {
             setTitle(R.string.title_edit_product);
             viewModel.loadProduct(productId).observe(this, this::populateFields);
@@ -182,6 +187,25 @@ public class AddEditActivity extends AppCompatActivity {
         selectedOpenDate = product.openDate;
         binding.editOpenDate.setText(product.openDate != null ? product.openDate.format(DATE_FORMATTER) : "");
         invalidateOptionsMenu();
+    }
+
+    /**
+     * Prefills a new product from an existing one for the "Duplicate" action. Everything is
+     * copied, including the barcode, except the open date: that's specific to the physical
+     * item being duplicated, so it's left empty for the new one to be opened fresh.
+     */
+    private void populateFieldsForDuplicate(@Nullable Product product) {
+        if (product == null) {
+            return;
+        }
+        binding.editName.setText(product.name);
+        binding.editType.setText(product.type, false);
+        binding.editQuantity.setText(String.valueOf(product.quantity));
+        binding.editUnit.setText(product.unit, false);
+        binding.editContainer.setText(product.container != null ? product.container : "", false);
+        binding.editBarcode.setText(product.barcode);
+        selectedExpiryDate = product.expiryDate;
+        binding.editExpiryDate.setText(product.expiryDate.format(DATE_FORMATTER));
     }
 
     private void showDatePicker() {
@@ -286,8 +310,21 @@ public class AddEditActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.action_delete) {
             confirmDelete();
             return true;
+        } else if (item.getItemId() == R.id.action_duplicate) {
+            duplicateProduct();
+            return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void duplicateProduct() {
+        // Closing this edit screen now (rather than after the duplicate is saved) means Save
+        // on the duplicate screen returns straight to the main list, since going back to
+        // editing the original product isn't a place the user is likely to want after this.
+        Intent intent = new Intent(this, AddEditActivity.class);
+        intent.putExtra(Constants.EXTRA_DUPLICATE_FROM_ID, productId);
+        startActivity(intent);
+        finish();
     }
 
     private void confirmDelete() {

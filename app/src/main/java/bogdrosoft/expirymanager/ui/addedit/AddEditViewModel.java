@@ -36,6 +36,15 @@ public class AddEditViewModel extends AndroidViewModel {
         return repository.getProduct(id);
     }
 
+    /**
+     * Loads a product to prefill a duplicate of it, without marking this screen as editing
+     * that product's row: {@code productId} is left untouched so {@link #isNew()} stays true
+     * and {@link #save} inserts a brand-new product instead of overwriting the original.
+     */
+    public LiveData<Product> loadProductForDuplicate(long id) {
+        return repository.getProduct(id);
+    }
+
     public void save(Product product) {
         repository.saveProduct(product, isNew());
     }
