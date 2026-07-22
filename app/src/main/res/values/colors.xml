@@ -5,6 +5,11 @@
     <color name="on_primary">#FFFFFF</color>
     <color name="accent">#FF6F00</color>
 
+    <!-- Text color for AlertDialog buttons (Save/Cancel/Delete). Dark-mode equivalent below is
+         lighter, since the plain "primary" green is too dark to read against a near-black
+         dialog surface. -->
+    <color name="dialog_button_color">@color/primary</color>
+
     <color name="status_expired">#C62828</color>
     <color name="status_soon">#EF6C00</color>
     <color name="status_ok">#424242</color>

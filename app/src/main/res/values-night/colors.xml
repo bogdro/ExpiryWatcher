@@ -16,4 +16,8 @@
     <color name="status_expired">#FF8A80</color>
     <color name="status_soon">#FFCC80</color>
     <color name="status_ok">#E0E0E0</color>
+
+    <!-- Lighter than the light-mode "primary" green (values/colors.xml), so AlertDialog
+         button text (Save/Cancel/Delete) stays readable against the dark dialog surface. -->
+    <color name="dialog_button_color">#81C784</color>
 </resources>
