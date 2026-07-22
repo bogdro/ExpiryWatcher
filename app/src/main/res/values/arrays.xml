@@ -12,4 +12,18 @@
         <item>ml</item>
         <item>l</item>
     </string-array>
+
+    <!-- Order must match bogdrosoft.expirymanager.util.SortOrder's enum declaration order,
+         since its ordinal is used both as the picker's selected index and as the DB sort mode. -->
+    <string-array name="sort_order_options">
+        <item>@string/sort_order_default</item>
+        <item>@string/sort_order_expiry_asc</item>
+        <item>@string/sort_order_expiry_desc</item>
+        <item>@string/sort_order_name_asc</item>
+        <item>@string/sort_order_name_desc</item>
+        <item>@string/sort_order_type_asc</item>
+        <item>@string/sort_order_type_desc</item>
+        <item>@string/sort_order_container_asc</item>
+        <item>@string/sort_order_container_desc</item>
+    </string-array>
 </resources>

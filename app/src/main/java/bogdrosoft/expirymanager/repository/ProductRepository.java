@@ -20,6 +20,7 @@ import bogdrosoft.expirymanager.data.entity.BarcodeDefaults;
 import bogdrosoft.expirymanager.data.entity.Container;
 import bogdrosoft.expirymanager.data.entity.Product;
 import bogdrosoft.expirymanager.data.entity.ProductType;
+import bogdrosoft.expirymanager.util.SortOrder;
 
 /**
  * Single source of truth for product data used by the UI layer. Wraps Room DAO access
@@ -45,8 +46,8 @@ public class ProductRepository {
         this.containerDao = db.containerDao();
     }
 
-    public LiveData<List<Product>> searchProducts(String query, boolean hideExhausted) {
-        return productDao.searchByName(query == null ? "" : query, hideExhausted);
+    public LiveData<List<Product>> searchProducts(String query, boolean hideExhausted, SortOrder sortOrder) {
+        return productDao.searchByName(query == null ? "" : query, hideExhausted, sortOrder.ordinal());
     }
 
     public LiveData<Product> getProduct(long id) {

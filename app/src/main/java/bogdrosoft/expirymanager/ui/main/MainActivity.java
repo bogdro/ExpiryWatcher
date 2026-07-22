@@ -8,6 +8,7 @@ import android.view.MenuItem;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.ViewModelProvider;
@@ -27,6 +28,7 @@ import bogdrosoft.expirymanager.ui.settings.SettingsActivity;
 import bogdrosoft.expirymanager.ui.types.ManageTypesActivity;
 import bogdrosoft.expirymanager.util.Constants;
 import bogdrosoft.expirymanager.util.SharedPrefsHelper;
+import bogdrosoft.expirymanager.util.SortOrder;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -114,7 +116,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_export) {
+        if (id == R.id.action_sort) {
+            showSortDialog();
+            return true;
+        } else if (id == R.id.action_export) {
             new DbExportManager(this).export();
             return true;
         } else if (id == R.id.action_import) {
@@ -131,6 +136,20 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showSortDialog() {
+        String[] options = getResources().getStringArray(R.array.sort_order_options);
+        SortOrder current = SharedPrefsHelper.getSortOrder(this);
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.title_sort_dialog)
+                .setSingleChoiceItems(options, current.ordinal(), (dialog, which) -> {
+                    SortOrder selected = SortOrder.fromOrdinal(which);
+                    SharedPrefsHelper.setSortOrder(this, selected);
+                    viewModel.setSortOrder(selected);
+                    dialog.dismiss();
+                })
+                .show();
     }
 
     private void onImportFilePicked(Uri uri) {

@@ -16,32 +16,36 @@ import bogdrosoft.expirymanager.data.entity.Product;
 import bogdrosoft.expirymanager.data.entity.ProductType;
 import bogdrosoft.expirymanager.repository.ProductRepository;
 import bogdrosoft.expirymanager.util.SharedPrefsHelper;
+import bogdrosoft.expirymanager.util.SortOrder;
 
 public class MainViewModel extends AndroidViewModel {
 
     private final ProductRepository repository;
-    // Bundles the search text and the "hide exhausted" setting together so both can drive the
-    // same switchMap: the setting lives in plain SharedPreferences (not its own LiveData), so
-    // MainActivity pushes its current value in here on every resume, same as it already does
-    // for the lead-time-based list coloring.
+    // Bundles the search text, the "hide exhausted" setting and the sort order together so all
+    // three can drive the same switchMap: the setting/sort order live in plain SharedPreferences
+    // (not their own LiveData), so MainActivity pushes their current value in here, same as it
+    // already does for the lead-time-based list coloring.
     private final MutableLiveData<Filter> filter;
     private final LiveData<List<Product>> products;
 
     private static final class Filter {
         final String query;
         final boolean hideExhausted;
+        final SortOrder sortOrder;
 
-        Filter(String query, boolean hideExhausted) {
+        Filter(String query, boolean hideExhausted, SortOrder sortOrder) {
             this.query = query;
             this.hideExhausted = hideExhausted;
+            this.sortOrder = sortOrder;
         }
     }
 
     public MainViewModel(@NonNull Application application) {
         super(application);
         repository = new ProductRepository(application);
-        filter = new MutableLiveData<>(new Filter("", SharedPrefsHelper.isHideExhaustedProductsEnabled(application)));
-        products = Transformations.switchMap(filter, f -> repository.searchProducts(f.query, f.hideExhausted));
+        filter = new MutableLiveData<>(new Filter("", SharedPrefsHelper.isHideExhaustedProductsEnabled(application),
+                SharedPrefsHelper.getSortOrder(application)));
+        products = Transformations.switchMap(filter, f -> repository.searchProducts(f.query, f.hideExhausted, f.sortOrder));
     }
 
     public LiveData<List<Product>> getProducts() {
@@ -51,7 +55,8 @@ public class MainViewModel extends AndroidViewModel {
     public void setSearchQuery(String query) {
         Filter current = filter.getValue();
         boolean hideExhausted = current != null && current.hideExhausted;
-        filter.setValue(new Filter(query == null ? "" : query, hideExhausted));
+        SortOrder sortOrder = current != null ? current.sortOrder : SortOrder.DEFAULT;
+        filter.setValue(new Filter(query == null ? "" : query, hideExhausted, sortOrder));
     }
 
     /**
@@ -61,10 +66,24 @@ public class MainViewModel extends AndroidViewModel {
     public void setHideExhausted(boolean hideExhausted) {
         Filter current = filter.getValue();
         String query = current != null ? current.query : "";
+        SortOrder sortOrder = current != null ? current.sortOrder : SortOrder.DEFAULT;
         if (current != null && current.hideExhausted == hideExhausted) {
             return;
         }
-        filter.setValue(new Filter(query, hideExhausted));
+        filter.setValue(new Filter(query, hideExhausted, sortOrder));
+    }
+
+    /**
+     * Called when the user picks a sort order from the main screen's "Sort" dialog.
+     */
+    public void setSortOrder(SortOrder sortOrder) {
+        Filter current = filter.getValue();
+        String query = current != null ? current.query : "";
+        boolean hideExhausted = current != null && current.hideExhausted;
+        if (current != null && current.sortOrder == sortOrder) {
+            return;
+        }
+        filter.setValue(new Filter(query, hideExhausted, sortOrder));
     }
 
     public void deleteProduct(Product product) {

@@ -63,6 +63,15 @@ public final class SharedPrefsHelper {
         prefs(context).edit().putBoolean(Constants.PREF_HIDE_EXHAUSTED_PRODUCTS, enabled).apply();
     }
 
+    public static SortOrder getSortOrder(Context context) {
+        int ordinal = prefs(context).getInt(Constants.PREF_SORT_ORDER, Constants.DEFAULT_SORT_ORDER);
+        return SortOrder.fromOrdinal(ordinal);
+    }
+
+    public static void setSortOrder(Context context, SortOrder sortOrder) {
+        prefs(context).edit().putInt(Constants.PREF_SORT_ORDER, sortOrder.ordinal()).apply();
+    }
+
     private static SharedPreferences prefs(Context context) {
         return context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
     }
