@@ -5,14 +5,19 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+
+import com.google.android.material.card.MaterialCardView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -84,10 +89,67 @@ public class MainActivity extends AppCompatActivity {
         viewModel.setHideExhausted(SharedPrefsHelper.isHideExhaustedProductsEnabled(this));
     }
 
-    private void onProductClicked(Product product) {
+    private void onProductClicked(Product product, View anchorView) {
+        MaterialCardView card = (MaterialCardView) anchorView;
+        setCardHighlighted(card, true);
+
+        PopupMenu popup = new PopupMenu(this, anchorView);
+        popup.setForceShowIcon(true);
+        popup.getMenuInflater().inflate(R.menu.menu_product_actions, popup.getMenu());
+        popup.setOnMenuItemClickListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.action_edit) {
+                openEdit(product);
+                return true;
+            } else if (id == R.id.action_duplicate) {
+                openDuplicate(product);
+                return true;
+            } else if (id == R.id.action_mark_opened) {
+                viewModel.markAsOpened(product);
+                return true;
+            } else if (id == R.id.action_set_quantity_zero) {
+                viewModel.setQuantityToZero(product);
+                return true;
+            } else if (id == R.id.action_delete) {
+                confirmDeleteProduct(product);
+                return true;
+            }
+            return false;
+        });
+        // Fires whether the menu closed via an action, an outside tap, or the back button, so
+        // the highlight never gets stuck on a row after the menu is gone either way.
+        popup.setOnDismissListener(menu -> setCardHighlighted(card, false));
+        popup.show();
+    }
+
+    private void setCardHighlighted(MaterialCardView card, boolean highlighted) {
+        if (highlighted) {
+            card.setStrokeWidth(getResources().getDimensionPixelSize(R.dimen.product_card_highlight_stroke_width));
+            card.setStrokeColor(ContextCompat.getColor(this, R.color.accent));
+        } else {
+            card.setStrokeWidth(0);
+        }
+    }
+
+    private void openEdit(Product product) {
         Intent intent = new Intent(this, AddEditActivity.class);
         intent.putExtra(Constants.EXTRA_PRODUCT_ID, product.id);
         startActivity(intent);
+    }
+
+    private void openDuplicate(Product product) {
+        Intent intent = new Intent(this, AddEditActivity.class);
+        intent.putExtra(Constants.EXTRA_DUPLICATE_FROM_ID, product.id);
+        startActivity(intent);
+    }
+
+    private void confirmDeleteProduct(Product product) {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.dialog_delete_title)
+                .setMessage(R.string.dialog_delete_message)
+                .setPositiveButton(R.string.action_delete, (dialog, which) -> viewModel.deleteProduct(product))
+                .setNegativeButton(R.string.action_cancel, null)
+                .show();
     }
 
     @Override

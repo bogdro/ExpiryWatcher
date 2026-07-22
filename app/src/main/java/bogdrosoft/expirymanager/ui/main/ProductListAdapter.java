@@ -26,7 +26,7 @@ import bogdrosoft.expirymanager.util.Constants;
 public class ProductListAdapter extends ListAdapter<Product, ProductListAdapter.ProductViewHolder> {
 
     public interface OnProductClickListener {
-        void onProductClick(Product product);
+        void onProductClick(Product product, View anchorView);
     }
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
@@ -155,7 +155,7 @@ public class ProductListAdapter extends ListAdapter<Product, ProductListAdapter.
                 textOpenDate.setVisibility(View.GONE);
             }
 
-            itemView.setOnClickListener(v -> listener.onProductClick(product));
+            itemView.setOnClickListener(v -> listener.onProductClick(product, v));
         }
     }
 }

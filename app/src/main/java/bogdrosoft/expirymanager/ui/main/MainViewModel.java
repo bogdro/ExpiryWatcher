@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,6 +89,48 @@ public class MainViewModel extends AndroidViewModel {
 
     public void deleteProduct(Product product) {
         repository.deleteProduct(product);
+    }
+
+    /**
+     * Sets today as the product's open date, from the main list's "Mark as opened" action.
+     */
+    public void markAsOpened(Product product) {
+        Product updated = copyOf(product);
+        updated.openDate = LocalDate.now();
+        repository.saveProduct(updated, false);
+    }
+
+    /**
+     * Zeroes out the product's quantity, from the main list's "Set quantity to 0" action; this
+     * also makes it "exhausted", so it sinks to the bottom of the default sort and gets its own
+     * card color, same as if it had been edited down to 0 by hand.
+     */
+    public void setQuantityToZero(Product product) {
+        Product updated = copyOf(product);
+        updated.quantity = 0;
+        repository.saveProduct(updated, false);
+    }
+
+    /**
+     * A fresh instance, not a mutation of {@code source}: that reference is the exact object
+     * the adapter's currently-displayed list is holding, and mutating it in place would corrupt
+     * the "old" snapshot DiffUtil later compares the refreshed Room query result against, making
+     * it see no change and skip re-binding the row (same pitfall fixed for the type editor).
+     */
+    private static Product copyOf(Product source) {
+        Product copy = new Product();
+        copy.id = source.id;
+        copy.name = source.name;
+        copy.type = source.type;
+        copy.quantity = source.quantity;
+        copy.unit = source.unit;
+        copy.expiryDate = source.expiryDate;
+        copy.openDate = source.openDate;
+        copy.container = source.container;
+        copy.barcode = source.barcode;
+        copy.createdAt = source.createdAt;
+        copy.updatedAt = source.updatedAt;
+        return copy;
     }
 
     /**

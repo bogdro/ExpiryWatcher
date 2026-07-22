@@ -49,6 +49,9 @@
     <string name="action_save">Save</string>
     <string name="action_delete">Delete</string>
     <string name="action_duplicate">Duplicate</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_mark_opened">Mark as opened</string>
+    <string name="action_set_quantity_zero">Set quantity to 0</string>
     <string name="error_name_required">Name is required</string>
     <string name="error_quantity_invalid">Enter a valid quantity</string>
     <string name="error_expiry_required">Expiry date is required</string>
