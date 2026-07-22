@@ -38,6 +38,8 @@
     <string name="label_name">Name</string>
     <string name="label_type">Type</string>
     <string name="label_quantity">Quantity</string>
+    <string name="action_decrease_quantity">Decrease quantity</string>
+    <string name="action_increase_quantity">Increase quantity</string>
     <string name="label_unit">Unit</string>
     <string name="label_expiry_date">Expiry date</string>
     <string name="label_open_date">Open date (optional)</string>

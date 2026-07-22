@@ -151,6 +151,8 @@ public class AddEditActivity extends AppCompatActivity {
             hideKeyboardAndClearFocus();
             scanHelper.startScan();
         });
+        binding.buttonDecreaseQuantity.setOnClickListener(v -> adjustQuantity(-1));
+        binding.buttonIncreaseQuantity.setOnClickListener(v -> adjustQuantity(1));
         binding.buttonSave.setOnClickListener(v -> onSaveClicked());
     }
 
@@ -239,6 +241,19 @@ public class AddEditActivity extends AppCompatActivity {
             binding.editUnit.setText(defaults.unit, false);
             binding.textBarcodePrefillHint.setVisibility(android.view.View.VISIBLE);
         });
+    }
+
+    private void adjustQuantity(int delta) {
+        int quantity;
+        try {
+            quantity = Integer.parseInt(text(binding.editQuantity));
+        } catch (NumberFormatException e) {
+            quantity = 0;
+        }
+        quantity = Math.max(0, quantity + delta);
+        binding.editQuantity.setText(String.valueOf(quantity));
+        binding.editQuantity.setSelection(binding.editQuantity.getText().length());
+        binding.layoutQuantity.setError(null);
     }
 
     private void onSaveClicked() {
