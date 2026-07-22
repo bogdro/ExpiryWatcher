@@ -61,6 +61,7 @@ public class SettingsActivity extends AppCompatActivity {
         });
         binding.switchHideExhausted.setOnCheckedChangeListener((buttonView, isChecked) ->
                 SharedPrefsHelper.setHideExhaustedProductsEnabled(this, isChecked));
+        binding.rowDeleteData.setOnClickListener(v -> startActivity(new Intent(this, DeleteDataActivity.class)));
     }
 
     @Override

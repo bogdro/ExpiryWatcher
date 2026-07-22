@@ -83,6 +83,21 @@
     <string name="pref_scan_sound_summary">Play a beep when a barcode is scanned successfully</string>
     <string name="pref_hide_exhausted_title">Hide exhausted products</string>
     <string name="pref_hide_exhausted_summary">Hide products with 0 units left from the main list</string>
+    <string name="pref_delete_data_title">Delete data</string>
+    <string name="pref_delete_data_summary">Permanently delete products or all app data</string>
+
+    <!-- Delete data screen -->
+    <string name="title_delete_data">Delete data</string>
+    <string name="action_delete_products">Delete products</string>
+    <string name="summary_delete_products">Deletes all products from the main list. Barcode scan history (remembered name, type, quantity and unit) is kept, so scanning a barcode again will still prefill those details.</string>
+    <string name="action_delete_all_data">Delete all data</string>
+    <string name="summary_delete_all_data">Deletes all products and barcode scan history, and resets product types and containers back to their default lists. Other settings, like the reminder time, are kept.</string>
+    <string name="dialog_delete_products_title">Delete all products?</string>
+    <string name="dialog_delete_products_message">This removes every product from the list. This cannot be undone.</string>
+    <string name="dialog_delete_all_data_title">Delete all data?</string>
+    <string name="dialog_delete_all_data_message">This removes every product and barcode scan history, and resets types and containers to their defaults. This cannot be undone.</string>
+    <string name="toast_products_deleted">All products deleted</string>
+    <string name="toast_all_data_deleted">All data deleted</string>
 
     <!-- Notifications -->
     <string name="notification_channel_name">Expiry reminders</string>

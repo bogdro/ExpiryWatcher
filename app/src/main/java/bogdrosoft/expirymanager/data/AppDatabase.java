@@ -32,8 +32,10 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(2);
 
-    private static final String[] DEFAULT_TYPE_NAMES = {"Grocery", "Medicine", "Dairy", "Household", "Other"};
-    private static final String[] DEFAULT_CONTAINER_NAMES = {"Fridge", "Freezer", "Pantry", "Medicine cabinet"};
+    // Also reused by ProductRepository.deleteAllData() to re-seed types/containers after a
+    // full data wipe, so this is the single source of truth for the default lists.
+    public static final String[] DEFAULT_TYPE_NAMES = {"Grocery", "Medicine", "Dairy", "Household", "Other"};
+    public static final String[] DEFAULT_CONTAINER_NAMES = {"Fridge", "Freezer", "Pantry", "Medicine cabinet"};
 
     public abstract ProductDao productDao();
 

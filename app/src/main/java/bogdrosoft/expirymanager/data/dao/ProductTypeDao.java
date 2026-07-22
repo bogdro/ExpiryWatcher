@@ -28,4 +28,7 @@ public interface ProductTypeDao {
 
     @Delete
     void delete(ProductType type);
+
+    @Query("DELETE FROM product_types")
+    void deleteAll();
 }

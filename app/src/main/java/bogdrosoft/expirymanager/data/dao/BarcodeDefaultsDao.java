@@ -17,4 +17,7 @@ public interface BarcodeDefaultsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void upsert(BarcodeDefaults defaults);
+
+    @Query("DELETE FROM barcode_defaults")
+    void deleteAll();
 }

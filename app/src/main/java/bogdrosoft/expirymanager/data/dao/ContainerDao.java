@@ -24,4 +24,7 @@ public interface ContainerDao {
 
     @Delete
     void delete(Container container);
+
+    @Query("DELETE FROM containers")
+    void deleteAll();
 }

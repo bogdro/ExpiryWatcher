@@ -82,6 +82,44 @@ public class ProductRepository {
         AppDatabase.databaseWriteExecutor.execute(() -> productDao.delete(product));
     }
 
+    /**
+     * Deletes all products, but keeps barcode scan history (so re-scanning a barcode still
+     * prefills its remembered details), custom types, containers, and non-database settings.
+     */
+    public void deleteAllProducts(Runnable onComplete) {
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            productDao.deleteAll();
+            mainHandler.post(onComplete);
+        });
+    }
+
+    /**
+     * Deletes everything in the database: products, barcode scan history, custom types and
+     * containers, then re-seeds types/containers back to the same defaults a fresh install
+     * gets ({@link AppDatabase#DEFAULT_TYPE_NAMES}/{@link AppDatabase#DEFAULT_CONTAINER_NAMES}).
+     * Non-database settings (e.g. reminder time) are untouched, since those live in
+     * SharedPreferences rather than this database.
+     */
+    public void deleteAllData(Runnable onComplete) {
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            productDao.deleteAll();
+            barcodeDefaultsDao.deleteAll();
+            productTypeDao.deleteAll();
+            containerDao.deleteAll();
+            for (String name : AppDatabase.DEFAULT_TYPE_NAMES) {
+                ProductType type = new ProductType();
+                type.name = name;
+                productTypeDao.insert(type);
+            }
+            for (String name : AppDatabase.DEFAULT_CONTAINER_NAMES) {
+                Container container = new Container();
+                container.name = name;
+                containerDao.insert(container);
+            }
+            mainHandler.post(onComplete);
+        });
+    }
+
     public void lookupBarcodeDefaults(String barcode, Callback<BarcodeDefaults> callback) {
         AppDatabase.databaseWriteExecutor.execute(() -> {
             BarcodeDefaults result = barcodeDefaultsDao.getByBarcodeSync(barcode);
