@@ -13,3 +13,6 @@ build/
 /app/release
 /app/debug
 *.hprof
+/keystore.properties
+*.jks
+*.keystore
