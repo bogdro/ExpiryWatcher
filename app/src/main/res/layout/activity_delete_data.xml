@@ -38,6 +38,8 @@
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/delete_color"
+            app:strokeColor="@color/delete_color"
             android:text="@string/action_delete_products" />
 
         <View
@@ -64,6 +66,8 @@
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/delete_color"
+            app:strokeColor="@color/delete_color"
             android:text="@string/action_delete_all_data" />
 
     </LinearLayout>

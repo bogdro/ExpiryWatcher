@@ -10,6 +10,12 @@
          dialog surface. -->
     <color name="dialog_button_color">@color/primary</color>
 
+    <!-- Destructive-action red for delete buttons/menu items and their confirming dialog
+         button, so they stand out from the theme's green everywhere they appear. Dark-mode
+         equivalent below is lighter, for the same dialog-surface-contrast reason as
+         dialog_button_color. -->
+    <color name="delete_color">#D32F2F</color>
+
     <color name="status_expired">#C62828</color>
     <color name="status_soon">#EF6C00</color>
     <color name="status_ok">#424242</color>

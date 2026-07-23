@@ -3,6 +3,8 @@ package bogdrosoft.expirymanager.ui.main;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -96,6 +98,11 @@ public class MainActivity extends AppCompatActivity {
         PopupMenu popup = new PopupMenu(this, anchorView);
         popup.setForceShowIcon(true);
         popup.getMenuInflater().inflate(R.menu.menu_product_actions, popup.getMenu());
+        MenuItem deleteItem = popup.getMenu().findItem(R.id.action_delete);
+        SpannableString deleteTitle = new SpannableString(deleteItem.getTitle());
+        deleteTitle.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, R.color.delete_color)),
+                0, deleteTitle.length(), 0);
+        deleteItem.setTitle(deleteTitle);
         popup.setOnMenuItemClickListener(item -> {
             int id = item.getItemId();
             if (id == R.id.action_edit) {

@@ -20,4 +20,8 @@
     <!-- Lighter than the light-mode "primary" green (values/colors.xml), so AlertDialog
          button text (Save/Cancel/Delete) stays readable against the dark dialog surface. -->
     <color name="dialog_button_color">#81C784</color>
+
+    <!-- Lighter than the light-mode delete red (values/colors.xml), so it stays readable
+         against dark surfaces (dialogs, popup menus) the same way dialog_button_color is. -->
+    <color name="delete_color">#FF8A80</color>
 </resources>
