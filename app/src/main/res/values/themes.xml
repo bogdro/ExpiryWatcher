@@ -9,6 +9,14 @@
         <item name="alertDialogTheme">@style/ThemeOverlay.ExpiryManager.AlertDialog</item>
     </style>
 
+    <!-- Forces the navigation/back arrow and the overflow ("3 dots") icon on the colorPrimary
+         toolbar to white in both day and night mode. Without this, AppCompat tints them via
+         colorControlNormal from the ambient day/night theme, which resolves to a near-black
+         color in light mode - low contrast against the green toolbar background. -->
+    <style name="ThemeOverlay.ExpiryManager.Toolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="colorControlNormal">@color/on_primary</item>
+    </style>
+
     <!-- Recolors AlertDialog buttons (Save/Cancel/Delete) with a day/night-aware color, since
          the app's plain "colorPrimary" green is too dark to read against the dark-mode dialog
          surface otherwise. -->
