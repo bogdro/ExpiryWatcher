@@ -67,6 +67,7 @@
     <string name="action_cancel">Cancel</string>
     <string name="barcode_prefilled_hint">Filled in from a previous entry with this barcode</string>
     <string name="camera_permission_required">Camera permission is needed to scan barcodes</string>
+    <string name="scan_status_hint">Point the camera at a barcode. Tap the screen if it doesn\'t focus.</string>
 
     <!-- Export / import -->
     <string name="export_chooser_title">Export product list</string>
