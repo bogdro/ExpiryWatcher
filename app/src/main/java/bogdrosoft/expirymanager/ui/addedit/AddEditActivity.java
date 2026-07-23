@@ -153,6 +153,11 @@ public class AddEditActivity extends AppCompatActivity {
         });
         binding.buttonDecreaseQuantity.setOnClickListener(v -> adjustQuantity(-1));
         binding.buttonIncreaseQuantity.setOnClickListener(v -> adjustQuantity(1));
+        binding.buttonExpiryMinus1m.setOnClickListener(v -> adjustExpiryDate(d -> d.minusMonths(1)));
+        binding.buttonExpiryToday.setOnClickListener(v -> adjustExpiryDate(d -> LocalDate.now()));
+        binding.buttonExpiryPlus1m.setOnClickListener(v -> adjustExpiryDate(d -> d.plusMonths(1)));
+        binding.buttonExpiryPlus3m.setOnClickListener(v -> adjustExpiryDate(d -> d.plusMonths(3)));
+        binding.buttonExpiryPlus1y.setOnClickListener(v -> adjustExpiryDate(d -> d.plusYears(1)));
         binding.buttonSave.setOnClickListener(v -> onSaveClicked());
     }
 
@@ -254,6 +259,16 @@ public class AddEditActivity extends AppCompatActivity {
         binding.editQuantity.setText(String.valueOf(quantity));
         binding.editQuantity.setSelection(binding.editQuantity.getText().length());
         binding.layoutQuantity.setError(null);
+    }
+
+    /**
+     * Adjusts the expiry-date field only (no other side effect, no saving). Applied to the
+     * currently displayed date if one is set, otherwise to today.
+     */
+    private void adjustExpiryDate(java.util.function.UnaryOperator<LocalDate> adjustment) {
+        LocalDate base = selectedExpiryDate != null ? selectedExpiryDate : LocalDate.now();
+        selectedExpiryDate = adjustment.apply(base);
+        binding.editExpiryDate.setText(selectedExpiryDate.format(DATE_FORMATTER));
     }
 
     private void onSaveClicked() {

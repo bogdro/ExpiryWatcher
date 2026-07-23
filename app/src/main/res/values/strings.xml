@@ -42,6 +42,11 @@
     <string name="action_increase_quantity">Increase quantity</string>
     <string name="label_unit">Unit</string>
     <string name="label_expiry_date">Expiry date</string>
+    <string name="action_expiry_minus_1_month">-1m</string>
+    <string name="action_expiry_today">Today</string>
+    <string name="action_expiry_plus_1_month">+1m</string>
+    <string name="action_expiry_plus_3_months">+3m</string>
+    <string name="action_expiry_plus_1_year">+1y</string>
     <string name="label_open_date">Open date (optional)</string>
     <string name="label_container">Container (optional)</string>
     <string name="action_clear_container">Clear container</string>
