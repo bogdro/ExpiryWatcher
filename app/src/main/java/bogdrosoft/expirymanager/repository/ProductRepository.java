@@ -158,6 +158,30 @@ public class ProductRepository {
         AppDatabase.databaseWriteExecutor.execute(() -> productTypeDao.delete(type));
     }
 
+    /**
+     * Renames a type and repoints every product that referenced the old name, as one
+     * transaction so the two tables can't end up disagreeing if something fails in between.
+     *
+     * @param callback delivered {@code true} on success, {@code false} if a type with
+     *                 {@code newName} already exists (name is the primary key).
+     */
+    public void renameType(String oldName, String newName, @Nullable Integer leadTimeDays, Callback<Boolean> callback) {
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            boolean success;
+            try {
+                db.runInTransaction(() -> {
+                    productTypeDao.rename(oldName, newName, leadTimeDays);
+                    productDao.updateTypeName(oldName, newName);
+                });
+                success = true;
+            } catch (SQLiteConstraintException e) {
+                success = false;
+            }
+            boolean result = success;
+            mainHandler.post(() -> callback.onResult(result));
+        });
+    }
+
     public LiveData<List<Container>> getAllContainers() {
         return containerDao.getAllSorted();
     }

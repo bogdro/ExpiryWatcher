@@ -3,6 +3,7 @@ package bogdrosoft.expirymanager.ui.types;
 import android.app.Application;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
@@ -34,5 +35,10 @@ public class ManageTypesViewModel extends AndroidViewModel {
 
     public void deleteType(ProductType type) {
         repository.deleteType(type);
+    }
+
+    public void renameType(String oldName, String newName, @Nullable Integer leadTimeDays,
+            ProductRepository.Callback<Boolean> callback) {
+        repository.renameType(oldName, newName, leadTimeDays, callback);
     }
 }

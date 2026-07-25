@@ -26,6 +26,12 @@ public interface ProductTypeDao {
     @Update
     void update(ProductType type);
 
+    // A plain @Update won't do for a name change: it matches the row to update by the entity's
+    // own primary key (name), so passing a ProductType with an already-changed name would look
+    // for a row that doesn't exist yet rather than renaming the old one.
+    @Query("UPDATE product_types SET name = :newName, lead_time_days = :leadTimeDays WHERE name = :oldName")
+    void rename(String oldName, String newName, Integer leadTimeDays);
+
     @Delete
     void delete(ProductType type);
 

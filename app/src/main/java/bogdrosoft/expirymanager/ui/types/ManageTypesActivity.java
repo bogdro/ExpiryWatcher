@@ -73,7 +73,6 @@ public class ManageTypesActivity extends AppCompatActivity {
 
         if (isEdit) {
             dialogBinding.editTypeName.setText(existing.name);
-            dialogBinding.editTypeName.setEnabled(false);
             if (existing.leadTimeDays != null) {
                 dialogBinding.editTypeLeadTime.setText(String.valueOf(existing.leadTimeDays));
             }
@@ -95,6 +94,13 @@ public class ManageTypesActivity extends AppCompatActivity {
             @Nullable ProductType existing) {
         boolean isEdit = existing != null;
 
+        String name = text(dialogBinding.editTypeName);
+        if (name.isEmpty()) {
+            dialogBinding.layoutTypeName.setError(getString(R.string.error_type_name_required));
+            return;
+        }
+        dialogBinding.layoutTypeName.setError(null);
+
         Integer leadTimeDays;
         String leadTimeText = text(dialogBinding.editTypeLeadTime);
         if (leadTimeText.isEmpty()) {
@@ -113,24 +119,28 @@ public class ManageTypesActivity extends AppCompatActivity {
         dialogBinding.layoutTypeLeadTime.setError(null);
 
         if (isEdit) {
-            // A fresh instance, not a mutation of `existing`: that reference is the exact
-            // object the adapter's currently-displayed list is holding, and mutating it in
-            // place would corrupt the "old" snapshot DiffUtil later compares the refreshed
-            // Room query result against, making it see no change and skip re-binding the row.
-            ProductType updated = new ProductType();
-            updated.name = existing.name;
-            updated.leadTimeDays = leadTimeDays;
-            viewModel.updateType(updated);
-            dialog.dismiss();
-            return;
-        }
+            if (name.equals(existing.name)) {
+                // A fresh instance, not a mutation of `existing`: that reference is the exact
+                // object the adapter's currently-displayed list is holding, and mutating it in
+                // place would corrupt the "old" snapshot DiffUtil later compares the refreshed
+                // Room query result against, making it see no change and skip re-binding the row.
+                ProductType updated = new ProductType();
+                updated.name = existing.name;
+                updated.leadTimeDays = leadTimeDays;
+                viewModel.updateType(updated);
+                dialog.dismiss();
+                return;
+            }
 
-        String name = text(dialogBinding.editTypeName);
-        if (name.isEmpty()) {
-            dialogBinding.layoutTypeName.setError(getString(R.string.error_type_name_required));
+            viewModel.renameType(existing.name, name, leadTimeDays, success -> {
+                if (success) {
+                    dialog.dismiss();
+                } else {
+                    dialogBinding.layoutTypeName.setError(getString(R.string.error_type_name_exists));
+                }
+            });
             return;
         }
-        dialogBinding.layoutTypeName.setError(null);
 
         ProductType newType = new ProductType();
         newType.name = name;

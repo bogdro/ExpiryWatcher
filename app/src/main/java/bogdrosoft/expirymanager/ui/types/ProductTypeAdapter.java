@@ -60,12 +60,14 @@ public class ProductTypeAdapter extends ListAdapter<ProductType, ProductTypeAdap
 
         private final TextView textName;
         private final TextView textLeadTime;
+        private final View buttonEdit;
         private final View buttonDelete;
 
         TypeViewHolder(@NonNull View itemView) {
             super(itemView);
             textName = itemView.findViewById(R.id.text_type_name);
             textLeadTime = itemView.findViewById(R.id.text_type_lead_time);
+            buttonEdit = itemView.findViewById(R.id.button_edit_type);
             buttonDelete = itemView.findViewById(R.id.button_delete_type);
         }
 
@@ -79,6 +81,7 @@ public class ProductTypeAdapter extends ListAdapter<ProductType, ProductTypeAdap
             textLeadTime.setText(summary);
 
             itemView.setOnClickListener(v -> listener.onEditType(type));
+            buttonEdit.setOnClickListener(v -> listener.onEditType(type));
             buttonDelete.setOnClickListener(v -> listener.onDeleteType(type));
         }
     }

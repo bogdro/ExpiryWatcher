@@ -130,7 +130,7 @@
     <string name="empty_types_message">No product types yet. Tap + to add one.</string>
     <string name="add_type_content_description">Add type</string>
     <string name="title_add_type">Add type</string>
-    <string name="title_edit_type">Edit reminder period</string>
+    <string name="title_edit_type">Edit type</string>
     <string name="label_type_name">Type name</string>
     <string name="label_type_lead_time">Reminder lead time (days)</string>
     <string name="type_lead_time_helper">Leave blank to use the default (%1$d days)</string>
