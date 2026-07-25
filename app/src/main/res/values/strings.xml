@@ -127,6 +127,7 @@
 
     <!-- Manage types -->
     <string name="title_manage_types">Manage product types</string>
+    <string name="manage_types_description">Types group similar products together, like Grocery or Medicine, and show up in the type dropdown when adding a product. Give one a custom reminder period to override the default for every product of that type.</string>
     <string name="empty_types_message">No product types yet. Tap + to add one.</string>
     <string name="add_type_content_description">Add type</string>
     <string name="title_add_type">Add type</string>
@@ -144,6 +145,7 @@
 
     <!-- Manage containers -->
     <string name="title_manage_containers">Manage containers</string>
+    <string name="manage_containers_description">Containers record where a product is physically stored, like Fridge or Pantry, and show up in the container dropdown when adding a product.</string>
     <string name="empty_containers_message">No containers yet. Tap + to add one.</string>
     <string name="add_container_content_description">Add container</string>
     <string name="title_add_container">Add container</string>
