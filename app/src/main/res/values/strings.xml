@@ -35,6 +35,7 @@
     <string name="action_manage_types">Manage types</string>
     <string name="action_manage_containers">Manage containers</string>
     <string name="action_settings">Settings</string>
+    <string name="action_about">About</string>
     <string name="add_product_content_description">Add product</string>
     <string name="status_expired">Expired</string>
     <string name="status_expires_today">Expires today</string>
@@ -168,4 +169,12 @@
     <string name="error_container_name_exists">This container already exists</string>
     <string name="dialog_delete_container_title">Delete this container?</string>
     <string name="dialog_delete_container_message">Products already using this container keep it as free text. This only removes it from the suggestion list.</string>
+
+    <!-- About -->
+    <string name="title_about">About</string>
+    <string name="about_version_format">Version %1$s</string>
+    <string name="about_description">Expiry Manager helps you track products by expiry date, scan barcodes to remember product details, and get reminders before things expire.</string>
+    <string name="about_author">Author: Bogdan Drozdowski (bogdro-soft@gmx.com)</string>
+    <string name="about_developed_with_ai">Developed with the help of Claude (Sonnet 5) by Anthropic.</string>
+    <string name="about_website">https://github.com/bogdro/ExpiryManager</string>
 </resources>

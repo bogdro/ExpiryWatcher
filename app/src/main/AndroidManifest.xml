@@ -48,6 +48,10 @@
             android:exported="false" />
 
         <activity
+            android:name=".ui.about.AboutActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".scan.BarcodeCaptureActivity"
             android:screenOrientation="fullSensor"
             android:exported="false" />
