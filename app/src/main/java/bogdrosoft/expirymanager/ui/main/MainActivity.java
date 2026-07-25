@@ -108,16 +108,39 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, AddEditActivity.class);
             startActivity(intent);
         });
+
+        // Only on a genuinely fresh launch (e.g. tapping an expiry notification), not when this
+        // same instance is merely being recreated for a configuration change - otherwise a
+        // rotation would keep re-applying the original notification's filter, silently
+        // overriding anything the user picked from the Filter dialog since then.
+        if (savedInstanceState == null) {
+            applyStatusFilterFromIntent(getIntent());
+        }
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        // The global default lead time lives in plain SharedPreferences (not LiveData-backed),
-        // so pick up any change made in Settings since we were last visible.
-        adapter.setLeadTimeSettings(typeLeadTimeOverrides, SharedPrefsHelper.getLeadTimeDays(this));
-        viewModel.setHideExhausted(SharedPrefsHelper.isHideExhaustedProductsEnabled(this));
-        viewModel.refreshDefaultLeadTimeDays(SharedPrefsHelper.getLeadTimeDays(this));
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        applyStatusFilterFromIntent(intent);
+    }
+
+    /**
+     * Jumps straight to the relevant status filter when launched from an expiry notification,
+     * clearing any other active filter first so the notification's promise ("N items expired")
+     * isn't silently narrowed by a leftover container/type filter from an earlier session.
+     */
+    private void applyStatusFilterFromIntent(@Nullable Intent intent) {
+        if (intent == null || !intent.hasExtra(Constants.EXTRA_STATUS_FILTER)) {
+            return;
+        }
+        ProductStatusFilter status = ProductStatusFilter.valueOf(intent.getStringExtra(Constants.EXTRA_STATUS_FILTER));
+        currentContainerFilter = null;
+        currentTypeFilter = null;
+        currentStatusFilter = status;
+        viewModel.setContainerFilter(null);
+        viewModel.setTypeFilter(null);
+        viewModel.setStatusFilter(status);
     }
 
     private boolean isAnyFilterActive() {

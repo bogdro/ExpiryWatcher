@@ -19,6 +19,7 @@ import bogdrosoft.expirymanager.R;
 import bogdrosoft.expirymanager.data.entity.Product;
 import bogdrosoft.expirymanager.ui.main.MainActivity;
 import bogdrosoft.expirymanager.util.Constants;
+import bogdrosoft.expirymanager.util.ProductStatusFilter;
 
 public final class NotificationHelper {
 
@@ -38,7 +39,8 @@ public final class NotificationHelper {
 
     public static void showExpiredSummary(Context context, List<Product> expiredProducts) {
         showSummary(context, expiredProducts, Constants.NOTIFICATION_ID_EXPIRED_SUMMARY,
-                R.string.notification_title_expired_single, R.string.notification_title_expired_plural);
+                R.string.notification_title_expired_single, R.string.notification_title_expired_plural,
+                ProductStatusFilter.EXPIRED);
     }
 
     public static void cancelExpiredSummary(Context context) {
@@ -47,7 +49,8 @@ public final class NotificationHelper {
 
     public static void showExpiringSoonSummary(Context context, List<Product> expiringSoonProducts) {
         showSummary(context, expiringSoonProducts, Constants.NOTIFICATION_ID_EXPIRING_SOON_SUMMARY,
-                R.string.notification_title_expiring_soon_single, R.string.notification_title_expiring_soon_plural);
+                R.string.notification_title_expiring_soon_single, R.string.notification_title_expiring_soon_plural,
+                ProductStatusFilter.EXPIRING_SOON);
     }
 
     public static void cancelExpiringSoonSummary(Context context) {
@@ -58,7 +61,7 @@ public final class NotificationHelper {
     // this id instead of leaving a stale one in the shade (e.g. the last expired product was
     // just deleted, or the user turned the category off after one was already posted).
     private static void showSummary(Context context, List<Product> products, int notificationId,
-            int titleSingleRes, int titlePluralRes) {
+            int titleSingleRes, int titlePluralRes, ProductStatusFilter statusFilter) {
         if (products.isEmpty()) {
             NotificationManagerCompat.from(context).cancel(notificationId);
             return;
@@ -74,8 +77,13 @@ public final class NotificationHelper {
 
         Intent contentIntent = new Intent(context, MainActivity.class);
         contentIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        contentIntent.putExtra(Constants.EXTRA_STATUS_FILTER, statusFilter.name());
+        // Request code must differ between the two categories: PendingIntent identity ignores
+        // extras, so sharing one (as both used to, via a hardcoded 0) would let whichever
+        // category's summary is (re)posted more recently silently overwrite the other's tap
+        // target, since PendingIntent.getActivity would just hand back the same instance.
         PendingIntent pendingIntent = PendingIntent.getActivity(
-                context, 0, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+                context, notificationId, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle();
         int shown = Math.min(products.size(), 5);

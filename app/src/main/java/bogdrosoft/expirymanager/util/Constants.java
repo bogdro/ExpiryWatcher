@@ -36,5 +36,6 @@ public final class Constants {
 
     public static final String EXTRA_PRODUCT_ID = "extra_product_id";
     public static final String EXTRA_DUPLICATE_FROM_ID = "extra_duplicate_from_id";
+    public static final String EXTRA_STATUS_FILTER = "extra_status_filter";
     public static final long NO_PRODUCT_ID = -1L;
 }
