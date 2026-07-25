@@ -1,5 +1,6 @@
 package bogdrosoft.expirymanager.ui.main;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -152,12 +153,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void confirmDeleteProduct(Product product) {
-        new AlertDialog.Builder(this)
+        AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.dialog_delete_title)
                 .setMessage(R.string.dialog_delete_message)
-                .setPositiveButton(R.string.action_delete, (dialog, which) -> viewModel.deleteProduct(product))
+                .setPositiveButton(R.string.action_delete, (d, which) -> viewModel.deleteProduct(product))
                 .setNegativeButton(R.string.action_cancel, null)
                 .show();
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, R.color.delete_color));
     }
 
     @Override

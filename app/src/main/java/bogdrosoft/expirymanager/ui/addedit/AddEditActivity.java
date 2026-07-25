@@ -2,6 +2,7 @@ package bogdrosoft.expirymanager.ui.addedit;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -15,6 +16,7 @@ import android.widget.ArrayAdapter;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.time.LocalDate;
@@ -370,10 +372,10 @@ public class AddEditActivity extends AppCompatActivity {
     }
 
     private void confirmDelete() {
-        new AlertDialog.Builder(this)
+        AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.dialog_delete_title)
                 .setMessage(R.string.dialog_delete_message)
-                .setPositiveButton(R.string.action_delete, (dialog, which) -> {
+                .setPositiveButton(R.string.action_delete, (d, which) -> {
                     if (currentProduct != null) {
                         viewModel.delete(currentProduct);
                     }
@@ -381,5 +383,6 @@ public class AddEditActivity extends AppCompatActivity {
                 })
                 .setNegativeButton(R.string.action_cancel, null)
                 .show();
+        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, R.color.delete_color));
     }
 }
