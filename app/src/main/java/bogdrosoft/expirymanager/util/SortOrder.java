@@ -5,7 +5,6 @@ package bogdrosoft.expirymanager.util;
  * and as the persisted value in SharedPreferences, so the declaration order here matters.
  */
 public enum SortOrder {
-    DEFAULT,
     EXPIRY_ASC,
     EXPIRY_DESC,
     NAME_ASC,
@@ -18,7 +17,7 @@ public enum SortOrder {
     public static SortOrder fromOrdinal(int ordinal) {
         SortOrder[] values = values();
         if (ordinal < 0 || ordinal >= values.length) {
-            return DEFAULT;
+            return EXPIRY_ASC;
         }
         return values[ordinal];
     }

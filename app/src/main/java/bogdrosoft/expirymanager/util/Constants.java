@@ -24,7 +24,7 @@ public final class Constants {
     public static final String PREF_HIDE_EXHAUSTED_PRODUCTS = "hide_exhausted_products";
     public static final boolean DEFAULT_HIDE_EXHAUSTED_PRODUCTS = false;
     public static final String PREF_SORT_ORDER = "sort_order";
-    public static final int DEFAULT_SORT_ORDER = 0; // SortOrder.DEFAULT.ordinal()
+    public static final int DEFAULT_SORT_ORDER = 0; // SortOrder.EXPIRY_ASC.ordinal()
     public static final String PREF_UI_MODE = "ui_mode";
     public static final int DEFAULT_UI_MODE = 0; // UiMode.SYSTEM_DEFAULT.ordinal()
 

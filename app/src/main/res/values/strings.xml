@@ -9,8 +9,7 @@
     <string name="search_hint">Search by name</string>
     <string name="action_sort">Sort</string>
     <string name="title_sort_dialog">Sort by</string>
-    <string name="sort_order_default">Default</string>
-    <string name="sort_order_expiry_asc">Expiry date (ascending)</string>
+    <string name="sort_order_expiry_asc">Expiry date (ascending) - default</string>
     <string name="sort_order_expiry_desc">Expiry date (descending)</string>
     <string name="sort_order_name_asc">Name (ascending)</string>
     <string name="sort_order_name_desc">Name (descending)</string>

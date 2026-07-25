@@ -56,7 +56,7 @@ public class MainViewModel extends AndroidViewModel {
     public void setSearchQuery(String query) {
         Filter current = filter.getValue();
         boolean hideExhausted = current != null && current.hideExhausted;
-        SortOrder sortOrder = current != null ? current.sortOrder : SortOrder.DEFAULT;
+        SortOrder sortOrder = current != null ? current.sortOrder : SortOrder.EXPIRY_ASC;
         filter.setValue(new Filter(query == null ? "" : query, hideExhausted, sortOrder));
     }
 
@@ -67,7 +67,7 @@ public class MainViewModel extends AndroidViewModel {
     public void setHideExhausted(boolean hideExhausted) {
         Filter current = filter.getValue();
         String query = current != null ? current.query : "";
-        SortOrder sortOrder = current != null ? current.sortOrder : SortOrder.DEFAULT;
+        SortOrder sortOrder = current != null ? current.sortOrder : SortOrder.EXPIRY_ASC;
         if (current != null && current.hideExhausted == hideExhausted) {
             return;
         }
