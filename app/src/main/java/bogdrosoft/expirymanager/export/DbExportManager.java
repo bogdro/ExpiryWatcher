@@ -11,6 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import bogdrosoft.expirymanager.R;
 import bogdrosoft.expirymanager.util.Constants;
@@ -22,6 +24,10 @@ import bogdrosoft.expirymanager.util.Constants;
  * to worry about copying atomically.
  */
 public class DbExportManager {
+
+    // Two-digit month/day/hour/minute/second, four-digit year - "yyyy_MM_dd_HH_mm_ss".
+    private static final DateTimeFormatter EXPORT_TIMESTAMP_FORMATTER =
+            DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss");
 
     private final Context context;
 
@@ -38,7 +44,8 @@ public class DbExportManager {
                 throw new IOException("Could not create exports directory");
             }
 
-            File exportFile = new File(exportsDir, "expirymanager_export_" + System.currentTimeMillis() + ".db");
+            String timestamp = LocalDateTime.now().format(EXPORT_TIMESTAMP_FORMATTER);
+            File exportFile = new File(exportsDir, "expirymanager_export_" + timestamp + ".db");
             Files.copy(dbFile.toPath(), exportFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
             Uri uri = FileProvider.getUriForFile(context, context.getPackageName() + ".fileprovider", exportFile);
