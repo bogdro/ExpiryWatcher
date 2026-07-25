@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -92,6 +91,8 @@ public class AddEditActivity extends AppCompatActivity {
             long duplicateFromId = getIntent().getLongExtra(Constants.EXTRA_DUPLICATE_FROM_ID, Constants.NO_PRODUCT_ID);
             if (duplicateFromId != Constants.NO_PRODUCT_ID) {
                 viewModel.loadProductForDuplicate(duplicateFromId).observe(this, this::populateFieldsForDuplicate);
+            } else {
+                binding.editQuantity.setText("1");
             }
         } else {
             setTitle(R.string.title_edit_product);
@@ -288,6 +289,12 @@ public class AddEditActivity extends AppCompatActivity {
         }
         binding.layoutName.setError(null);
 
+        if (type.isEmpty()) {
+            binding.layoutType.setError(getString(R.string.error_type_required));
+            return;
+        }
+        binding.layoutType.setError(null);
+
         int quantity;
         try {
             quantity = Integer.parseInt(quantityText);
@@ -301,9 +308,10 @@ public class AddEditActivity extends AppCompatActivity {
         binding.layoutQuantity.setError(null);
 
         if (selectedExpiryDate == null) {
-            Toast.makeText(this, R.string.error_expiry_required, Toast.LENGTH_SHORT).show();
+            binding.layoutExpiryDate.setError(getString(R.string.error_expiry_required));
             return;
         }
+        binding.layoutExpiryDate.setError(null);
 
         boolean isNew = viewModel.isNew();
         Product product = isNew || currentProduct == null ? new Product() : currentProduct;
