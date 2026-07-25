@@ -114,38 +114,40 @@ public class ProductListAdapter extends ListAdapter<Product, ProductListAdapter.
                         R.string.item_details_format, product.type, product.quantity, product.unit));
             }
 
-            long daysLeft = product.expiryDate.toEpochDay() - LocalDate.now().toEpochDay();
-
-            String status;
-            int textColorRes;
-            int cardColorRes;
-            if (daysLeft < 0) {
-                status = itemView.getContext().getString(R.string.status_expired);
-                textColorRes = R.color.status_expired;
-                cardColorRes = R.color.card_expired;
-            } else if (daysLeft <= leadTimeDays) {
-                status = daysLeft == 0
-                        ? itemView.getContext().getString(R.string.status_expires_today)
-                        : itemView.getContext().getString(R.string.status_days_left, (int) daysLeft);
-                textColorRes = R.color.status_soon;
-                cardColorRes = R.color.card_near_expiry;
-            } else {
-                status = itemView.getContext().getString(R.string.status_days_left, (int) daysLeft);
-                textColorRes = R.color.status_ok;
-                cardColorRes = R.color.card_fresh;
-            }
-
             // Exhausted products (0 units left) are sorted to the bottom regardless of expiry
-            // date; the card background reflects that grouping too, taking priority over the
-            // expiry-status color, while the status text/color still reports the real expiry.
+            // date, get their own card color, and skip the expiry date/status line entirely -
+            // once a product is used up, when it would have expired isn't relevant anymore.
             if (product.quantity == 0) {
-                cardColorRes = R.color.card_exhausted;
-            }
+                textExpiry.setVisibility(View.GONE);
+                card.setCardBackgroundColor(ContextCompat.getColor(itemView.getContext(), R.color.card_exhausted));
+            } else {
+                long daysLeft = product.expiryDate.toEpochDay() - LocalDate.now().toEpochDay();
 
-            textExpiry.setText(itemView.getContext().getString(
-                    R.string.item_expiry_format, product.expiryDate.format(DATE_FORMATTER), status));
-            textExpiry.setTextColor(itemView.getContext().getColor(textColorRes));
-            card.setCardBackgroundColor(ContextCompat.getColor(itemView.getContext(), cardColorRes));
+                String status;
+                int textColorRes;
+                int cardColorRes;
+                if (daysLeft < 0) {
+                    status = itemView.getContext().getString(R.string.status_expired);
+                    textColorRes = R.color.status_expired;
+                    cardColorRes = R.color.card_expired;
+                } else if (daysLeft <= leadTimeDays) {
+                    status = daysLeft == 0
+                            ? itemView.getContext().getString(R.string.status_expires_today)
+                            : itemView.getContext().getString(R.string.status_days_left, (int) daysLeft);
+                    textColorRes = R.color.status_soon;
+                    cardColorRes = R.color.card_near_expiry;
+                } else {
+                    status = itemView.getContext().getString(R.string.status_days_left, (int) daysLeft);
+                    textColorRes = R.color.status_ok;
+                    cardColorRes = R.color.card_fresh;
+                }
+
+                textExpiry.setVisibility(View.VISIBLE);
+                textExpiry.setText(itemView.getContext().getString(
+                        R.string.item_expiry_format, product.expiryDate.format(DATE_FORMATTER), status));
+                textExpiry.setTextColor(itemView.getContext().getColor(textColorRes));
+                card.setCardBackgroundColor(ContextCompat.getColor(itemView.getContext(), cardColorRes));
+            }
 
             if (product.openDate != null) {
                 textOpenDate.setText(itemView.getContext().getString(

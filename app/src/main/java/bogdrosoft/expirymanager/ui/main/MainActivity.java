@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         PopupMenu popup = new PopupMenu(this, anchorView);
         popup.setForceShowIcon(true);
         popup.getMenuInflater().inflate(R.menu.menu_product_actions, popup.getMenu());
-        popup.getMenu().findItem(R.id.action_mark_opened).setVisible(product.openDate == null);
+        popup.getMenu().findItem(R.id.action_mark_opened).setVisible(product.openDate == null && product.quantity != 0);
         MenuItem deleteItem = popup.getMenu().findItem(R.id.action_delete);
         SpannableString deleteTitle = new SpannableString(deleteItem.getTitle());
         deleteTitle.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, R.color.delete_color)),
