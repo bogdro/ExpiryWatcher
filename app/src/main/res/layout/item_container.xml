@@ -26,6 +26,15 @@
             tools:text="Fridge" />
 
         <ImageButton
+            android:id="@+id/button_edit_container"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/action_edit"
+            android:src="@drawable/ic_edit"
+            android:tint="?attr/colorOnSurface" />
+
+        <ImageButton
             android:id="@+id/button_delete_container"
             android:layout_width="40dp"
             android:layout_height="40dp"

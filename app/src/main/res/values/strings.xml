@@ -147,6 +147,7 @@
     <string name="empty_containers_message">No containers yet. Tap + to add one.</string>
     <string name="add_container_content_description">Add container</string>
     <string name="title_add_container">Add container</string>
+    <string name="title_edit_container">Edit container</string>
     <string name="label_container_name">Container name</string>
     <string name="error_container_name_required">Container name is required</string>
     <string name="error_container_name_exists">This container already exists</string>

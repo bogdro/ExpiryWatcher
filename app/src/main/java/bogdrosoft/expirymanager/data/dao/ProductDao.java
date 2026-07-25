@@ -55,6 +55,11 @@ public interface ProductDao {
     @Query("SELECT COUNT(*) FROM products")
     int countSync();
 
+    // Used when a container is renamed, so existing products keep pointing at it rather than
+    // being left referencing a name that no longer exists in the containers table.
+    @Query("UPDATE products SET container = :newName WHERE container = :oldName")
+    void updateContainerName(String oldName, String newName);
+
     @Insert
     long insert(Product product);
 

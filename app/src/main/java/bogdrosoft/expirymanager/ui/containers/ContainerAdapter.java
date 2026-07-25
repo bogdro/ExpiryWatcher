@@ -16,6 +16,8 @@ import bogdrosoft.expirymanager.data.entity.Container;
 public class ContainerAdapter extends ListAdapter<Container, ContainerAdapter.ContainerViewHolder> {
 
     public interface Listener {
+        void onEditContainer(Container container);
+
         void onDeleteContainer(Container container);
     }
 
@@ -54,16 +56,20 @@ public class ContainerAdapter extends ListAdapter<Container, ContainerAdapter.Co
     static class ContainerViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView textName;
+        private final View buttonEdit;
         private final View buttonDelete;
 
         ContainerViewHolder(@NonNull View itemView) {
             super(itemView);
             textName = itemView.findViewById(R.id.text_container_name);
+            buttonEdit = itemView.findViewById(R.id.button_edit_container);
             buttonDelete = itemView.findViewById(R.id.button_delete_container);
         }
 
         void bind(Container container, Listener listener) {
             textName.setText(container.name);
+            itemView.setOnClickListener(v -> listener.onEditContainer(container));
+            buttonEdit.setOnClickListener(v -> listener.onEditContainer(container));
             buttonDelete.setOnClickListener(v -> listener.onDeleteContainer(container));
         }
     }

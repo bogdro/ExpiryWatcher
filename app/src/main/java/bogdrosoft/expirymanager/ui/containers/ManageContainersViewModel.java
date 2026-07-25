@@ -31,4 +31,8 @@ public class ManageContainersViewModel extends AndroidViewModel {
     public void deleteContainer(Container container) {
         repository.deleteContainer(container);
     }
+
+    public void renameContainer(String oldName, String newName, ProductRepository.Callback<Boolean> callback) {
+        repository.renameContainer(oldName, newName, callback);
+    }
 }

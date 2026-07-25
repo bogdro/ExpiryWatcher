@@ -22,6 +22,12 @@ public interface ContainerDao {
     @Insert
     void insert(Container container);
 
+    // A plain @Update won't do here: it matches the row to update by the entity's own primary
+    // key (name), so passing a Container with a already-changed name would look for a row that
+    // doesn't exist yet rather than renaming the old one.
+    @Query("UPDATE containers SET name = :newName WHERE name = :oldName")
+    void rename(String oldName, String newName);
+
     @Delete
     void delete(Container container);
 

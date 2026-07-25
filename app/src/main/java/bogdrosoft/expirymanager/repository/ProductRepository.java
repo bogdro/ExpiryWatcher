@@ -32,6 +32,7 @@ public class ProductRepository {
         void onResult(@Nullable T result);
     }
 
+    private final AppDatabase db;
     private final ProductDao productDao;
     private final BarcodeDefaultsDao barcodeDefaultsDao;
     private final ProductTypeDao productTypeDao;
@@ -39,7 +40,7 @@ public class ProductRepository {
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     public ProductRepository(@NonNull Context context) {
-        AppDatabase db = AppDatabase.getInstance(context);
+        this.db = AppDatabase.getInstance(context);
         this.productDao = db.productDao();
         this.barcodeDefaultsDao = db.barcodeDefaultsDao();
         this.productTypeDao = db.productTypeDao();
@@ -181,5 +182,29 @@ public class ProductRepository {
 
     public void deleteContainer(Container container) {
         AppDatabase.databaseWriteExecutor.execute(() -> containerDao.delete(container));
+    }
+
+    /**
+     * Renames a container and repoints every product that referenced the old name, as one
+     * transaction so the two tables can't end up disagreeing if something fails in between.
+     *
+     * @param callback delivered {@code true} on success, {@code false} if a container with
+     *                 {@code newName} already exists (name is the primary key).
+     */
+    public void renameContainer(String oldName, String newName, Callback<Boolean> callback) {
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            boolean success;
+            try {
+                db.runInTransaction(() -> {
+                    containerDao.rename(oldName, newName);
+                    productDao.updateContainerName(oldName, newName);
+                });
+                success = true;
+            } catch (SQLiteConstraintException e) {
+                success = false;
+            }
+            boolean result = success;
+            mainHandler.post(() -> callback.onResult(result));
+        });
     }
 }
