@@ -3,19 +3,24 @@ package bogdrosoft.expirymanager.ui.main;
 import android.app.Application;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
+import bogdrosoft.expirymanager.data.entity.Container;
 import bogdrosoft.expirymanager.data.entity.Product;
 import bogdrosoft.expirymanager.data.entity.ProductType;
 import bogdrosoft.expirymanager.repository.ProductRepository;
+import bogdrosoft.expirymanager.util.ProductStatusFilter;
 import bogdrosoft.expirymanager.util.SharedPrefsHelper;
 import bogdrosoft.expirymanager.util.SortOrder;
 
@@ -33,11 +38,20 @@ public class MainViewModel extends AndroidViewModel {
         final String query;
         final boolean hideExhausted;
         final SortOrder sortOrder;
+        @Nullable final String containerFilter;
+        @Nullable final String typeFilter;
+        @Nullable final ProductStatusFilter statusFilter;
+        final int defaultLeadTimeDays;
 
-        Filter(String query, boolean hideExhausted, SortOrder sortOrder) {
+        Filter(String query, boolean hideExhausted, SortOrder sortOrder, @Nullable String containerFilter,
+                @Nullable String typeFilter, @Nullable ProductStatusFilter statusFilter, int defaultLeadTimeDays) {
             this.query = query;
             this.hideExhausted = hideExhausted;
             this.sortOrder = sortOrder;
+            this.containerFilter = containerFilter;
+            this.typeFilter = typeFilter;
+            this.statusFilter = statusFilter;
+            this.defaultLeadTimeDays = defaultLeadTimeDays;
         }
     }
 
@@ -45,8 +59,10 @@ public class MainViewModel extends AndroidViewModel {
         super(application);
         repository = new ProductRepository(application);
         filter = new MutableLiveData<>(new Filter("", SharedPrefsHelper.isHideExhaustedProductsEnabled(application),
-                SharedPrefsHelper.getSortOrder(application)));
-        products = Transformations.switchMap(filter, f -> repository.searchProducts(f.query, f.hideExhausted, f.sortOrder));
+                SharedPrefsHelper.getSortOrder(application), null, null, null,
+                SharedPrefsHelper.getLeadTimeDays(application)));
+        products = Transformations.switchMap(filter, f -> repository.searchProducts(f.query, f.hideExhausted, f.sortOrder,
+                f.containerFilter, f.typeFilter, f.statusFilter, f.defaultLeadTimeDays));
     }
 
     public LiveData<List<Product>> getProducts() {
@@ -55,9 +71,11 @@ public class MainViewModel extends AndroidViewModel {
 
     public void setSearchQuery(String query) {
         Filter current = filter.getValue();
-        boolean hideExhausted = current != null && current.hideExhausted;
-        SortOrder sortOrder = current != null ? current.sortOrder : SortOrder.EXPIRY_ASC;
-        filter.setValue(new Filter(query == null ? "" : query, hideExhausted, sortOrder));
+        if (current == null) {
+            return;
+        }
+        filter.setValue(new Filter(query == null ? "" : query, current.hideExhausted, current.sortOrder,
+                current.containerFilter, current.typeFilter, current.statusFilter, current.defaultLeadTimeDays));
     }
 
     /**
@@ -66,12 +84,11 @@ public class MainViewModel extends AndroidViewModel {
      */
     public void setHideExhausted(boolean hideExhausted) {
         Filter current = filter.getValue();
-        String query = current != null ? current.query : "";
-        SortOrder sortOrder = current != null ? current.sortOrder : SortOrder.EXPIRY_ASC;
-        if (current != null && current.hideExhausted == hideExhausted) {
+        if (current == null || current.hideExhausted == hideExhausted) {
             return;
         }
-        filter.setValue(new Filter(query, hideExhausted, sortOrder));
+        filter.setValue(new Filter(current.query, hideExhausted, current.sortOrder,
+                current.containerFilter, current.typeFilter, current.statusFilter, current.defaultLeadTimeDays));
     }
 
     /**
@@ -79,12 +96,64 @@ public class MainViewModel extends AndroidViewModel {
      */
     public void setSortOrder(SortOrder sortOrder) {
         Filter current = filter.getValue();
-        String query = current != null ? current.query : "";
-        boolean hideExhausted = current != null && current.hideExhausted;
-        if (current != null && current.sortOrder == sortOrder) {
+        if (current == null || current.sortOrder == sortOrder) {
             return;
         }
-        filter.setValue(new Filter(query, hideExhausted, sortOrder));
+        filter.setValue(new Filter(current.query, current.hideExhausted, sortOrder,
+                current.containerFilter, current.typeFilter, current.statusFilter, current.defaultLeadTimeDays));
+    }
+
+    /**
+     * Called when the user picks a container from the main screen's "Filter" dialog;
+     * {@code null} means "any container".
+     */
+    public void setContainerFilter(@Nullable String containerFilter) {
+        Filter current = filter.getValue();
+        if (current == null || Objects.equals(current.containerFilter, containerFilter)) {
+            return;
+        }
+        filter.setValue(new Filter(current.query, current.hideExhausted, current.sortOrder,
+                containerFilter, current.typeFilter, current.statusFilter, current.defaultLeadTimeDays));
+    }
+
+    /**
+     * Called when the user picks a type from the main screen's "Filter" dialog;
+     * {@code null} means "any type".
+     */
+    public void setTypeFilter(@Nullable String typeFilter) {
+        Filter current = filter.getValue();
+        if (current == null || Objects.equals(current.typeFilter, typeFilter)) {
+            return;
+        }
+        filter.setValue(new Filter(current.query, current.hideExhausted, current.sortOrder,
+                current.containerFilter, typeFilter, current.statusFilter, current.defaultLeadTimeDays));
+    }
+
+    /**
+     * Called when the user picks a status from the main screen's "Filter" dialog;
+     * {@code null} means "any status".
+     */
+    public void setStatusFilter(@Nullable ProductStatusFilter statusFilter) {
+        Filter current = filter.getValue();
+        if (current == null || current.statusFilter == statusFilter) {
+            return;
+        }
+        filter.setValue(new Filter(current.query, current.hideExhausted, current.sortOrder,
+                current.containerFilter, current.typeFilter, statusFilter, current.defaultLeadTimeDays));
+    }
+
+    /**
+     * Called from {@code MainActivity.onResume()}: the global default lead time can change in
+     * Settings while this screen isn't visible, and the status filter's "about to expire"/"not
+     * expiring" buckets depend on it for products without their own type override.
+     */
+    public void refreshDefaultLeadTimeDays(int defaultLeadTimeDays) {
+        Filter current = filter.getValue();
+        if (current == null || current.defaultLeadTimeDays == defaultLeadTimeDays) {
+            return;
+        }
+        filter.setValue(new Filter(current.query, current.hideExhausted, current.sortOrder,
+                current.containerFilter, current.typeFilter, current.statusFilter, defaultLeadTimeDays));
     }
 
     public void deleteProduct(Product product) {
@@ -149,6 +218,30 @@ public class MainViewModel extends AndroidViewModel {
                 }
             }
             return overrides;
+        });
+    }
+
+    /**
+     * Container/type names for the main screen's "Filter" dialog to build its value pickers
+     * from, kept as plain name lists since the dialog has no use for the rest of either entity.
+     */
+    public LiveData<List<String>> getAllContainerNames() {
+        return Transformations.map(repository.getAllContainers(), containers -> {
+            List<String> names = new ArrayList<>();
+            for (Container container : containers) {
+                names.add(container.name);
+            }
+            return names;
+        });
+    }
+
+    public LiveData<List<String>> getAllTypeNames() {
+        return Transformations.map(repository.getAllTypes(), types -> {
+            List<String> names = new ArrayList<>();
+            for (ProductType type : types) {
+                names.add(type.name);
+            }
+            return names;
         });
     }
 }

@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import bogdrosoft.expirymanager.data.AppDatabase;
@@ -20,6 +21,7 @@ import bogdrosoft.expirymanager.data.entity.BarcodeDefaults;
 import bogdrosoft.expirymanager.data.entity.Container;
 import bogdrosoft.expirymanager.data.entity.Product;
 import bogdrosoft.expirymanager.data.entity.ProductType;
+import bogdrosoft.expirymanager.util.ProductStatusFilter;
 import bogdrosoft.expirymanager.util.SortOrder;
 
 /**
@@ -47,8 +49,15 @@ public class ProductRepository {
         this.containerDao = db.containerDao();
     }
 
-    public LiveData<List<Product>> searchProducts(String query, boolean hideExhausted, SortOrder sortOrder) {
-        return productDao.searchByName(query == null ? "" : query, hideExhausted, sortOrder.ordinal());
+    public LiveData<List<Product>> searchProducts(String query, boolean hideExhausted, SortOrder sortOrder,
+            @Nullable String containerFilter, @Nullable String typeFilter,
+            @Nullable ProductStatusFilter statusFilter, int defaultLeadTimeDays) {
+        long todayEpochDay = LocalDate.now().toEpochDay();
+        return productDao.searchByName(query == null ? "" : query, hideExhausted, sortOrder.ordinal(),
+                containerFilter == null ? "" : containerFilter,
+                typeFilter == null ? "" : typeFilter,
+                statusFilter != null ? statusFilter.ordinal() : -1,
+                todayEpochDay, defaultLeadTimeDays);
     }
 
     public LiveData<Product> getProduct(long id) {

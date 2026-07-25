@@ -8,6 +8,11 @@
         app:showAsAction="always|collapseActionView"
         app:actionViewClass="androidx.appcompat.widget.SearchView" />
     <item
+        android:id="@+id/action_filter"
+        android:title="@string/action_filter"
+        android:icon="@drawable/ic_filter"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/action_sort"
         android:title="@string/action_sort"
         android:icon="@drawable/ic_sort"

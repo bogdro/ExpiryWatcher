@@ -5,8 +5,21 @@
     <!-- Main list -->
     <string name="empty_list_message">No products yet. Tap + to add one.</string>
     <string name="empty_search_message">No products match your search.</string>
+    <string name="empty_filtered_message">No products match the current filter.</string>
     <string name="action_search">Search</string>
     <string name="search_hint">Search by name</string>
+    <string name="action_filter">Filter</string>
+    <string name="title_filter_dialog">Filter</string>
+    <string name="action_clear_filter">Clear filter</string>
+    <string name="filter_row_format">%1$s: %2$s</string>
+    <string name="filter_dimension_container">Container</string>
+    <string name="filter_dimension_type">Type</string>
+    <string name="filter_dimension_status">Status</string>
+    <string name="filter_value_any">Any</string>
+    <string name="status_filter_expired">Expired</string>
+    <string name="status_filter_expiring_soon">About to expire</string>
+    <string name="status_filter_not_expiring">Not expiring</string>
+    <string name="status_filter_exhausted">Exhausted</string>
     <string name="action_sort">Sort</string>
     <string name="title_sort_dialog">Sort by</string>
     <string name="sort_order_expiry_asc">Expiry date (ascending) - default</string>

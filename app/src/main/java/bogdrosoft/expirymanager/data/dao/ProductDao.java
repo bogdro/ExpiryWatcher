@@ -18,7 +18,14 @@ public interface ProductDao {
     // whether or not the user has typed a search term. SQLite's LIKE is already
     // case-insensitive for ASCII, which covers the "case-insensitive" requirement here.
     // hideExhausted is bound as 0/1, so "hideExhausted = 0" short-circuits the quantity check
-    // when the setting is off.
+    // when the setting is off; it's also short-circuited whenever statusFilter explicitly asks
+    // for exhausted products (3), so that filter can't be silently emptied by the setting.
+    // containerFilter/typeFilter empty-string means "no filter", same convention as query.
+    //
+    // statusFilter's values match bogdrosoft.expirymanager.util.ProductStatusFilter's ordinals,
+    // with -1 meaning "no filter". Effective lead time is the product's type's own override
+    // (product_types.lead_time_days) falling back to the global default, the same rule the
+    // expiry reminder notifications use.
     //
     // sortMode's values match bogdrosoft.expirymanager.util.SortOrder's ordinals. Each ORDER BY
     // term is a CASE that only produces a real value for the active sortMode; for every other
@@ -27,20 +34,34 @@ public interface ProductDao {
     // Modes 0 and 1 (EXPIRY_ASC/EXPIRY_DESC) both sink exhausted products to the bottom first,
     // then order by expiry date; the other modes sort purely by the chosen field, with
     // expiry_date as a final tiebreaker for equal values.
-    @Query("SELECT * FROM products WHERE (:query = '' OR name LIKE '%' || :query || '%') "
-            + "AND (:hideExhausted = 0 OR quantity != 0) "
+    @Query("SELECT p.* FROM products p LEFT JOIN product_types pt ON pt.name = p.type "
+            + "WHERE (:query = '' OR p.name LIKE '%' || :query || '%') "
+            + "AND (:hideExhausted = 0 OR p.quantity != 0 OR :statusFilter = 3) "
+            + "AND (:containerFilter = '' OR p.container = :containerFilter) "
+            + "AND (:typeFilter = '' OR p.type = :typeFilter) "
+            + "AND ("
+            + "  :statusFilter = -1"
+            + "  OR (:statusFilter = 3 AND p.quantity = 0)"
+            + "  OR (:statusFilter != 3 AND p.quantity != 0 AND ("
+            + "    (:statusFilter = 0 AND (p.expiry_date - :todayEpochDay) < 0)"
+            + "    OR (:statusFilter = 1 AND (p.expiry_date - :todayEpochDay) >= 0 "
+            + "        AND (p.expiry_date - :todayEpochDay) <= COALESCE(pt.lead_time_days, :defaultLeadTimeDays))"
+            + "    OR (:statusFilter = 2 AND (p.expiry_date - :todayEpochDay) > COALESCE(pt.lead_time_days, :defaultLeadTimeDays))"
+            + "  ))"
+            + ") "
             + "ORDER BY "
-            + "CASE WHEN :sortMode IN (0, 1) THEN (quantity = 0) END ASC, "
-            + "CASE WHEN :sortMode = 0 THEN expiry_date END ASC, "
-            + "CASE WHEN :sortMode = 1 THEN expiry_date END DESC, "
-            + "CASE WHEN :sortMode = 2 THEN name END COLLATE NOCASE ASC, "
-            + "CASE WHEN :sortMode = 3 THEN name END COLLATE NOCASE DESC, "
-            + "CASE WHEN :sortMode = 4 THEN type END COLLATE NOCASE ASC, "
-            + "CASE WHEN :sortMode = 5 THEN type END COLLATE NOCASE DESC, "
-            + "CASE WHEN :sortMode = 6 THEN container END COLLATE NOCASE ASC, "
-            + "CASE WHEN :sortMode = 7 THEN container END COLLATE NOCASE DESC, "
-            + "expiry_date ASC")
-    LiveData<List<Product>> searchByName(String query, boolean hideExhausted, int sortMode);
+            + "CASE WHEN :sortMode IN (0, 1) THEN (p.quantity = 0) END ASC, "
+            + "CASE WHEN :sortMode = 0 THEN p.expiry_date END ASC, "
+            + "CASE WHEN :sortMode = 1 THEN p.expiry_date END DESC, "
+            + "CASE WHEN :sortMode = 2 THEN p.name END COLLATE NOCASE ASC, "
+            + "CASE WHEN :sortMode = 3 THEN p.name END COLLATE NOCASE DESC, "
+            + "CASE WHEN :sortMode = 4 THEN p.type END COLLATE NOCASE ASC, "
+            + "CASE WHEN :sortMode = 5 THEN p.type END COLLATE NOCASE DESC, "
+            + "CASE WHEN :sortMode = 6 THEN p.container END COLLATE NOCASE ASC, "
+            + "CASE WHEN :sortMode = 7 THEN p.container END COLLATE NOCASE DESC, "
+            + "p.expiry_date ASC")
+    LiveData<List<Product>> searchByName(String query, boolean hideExhausted, int sortMode,
+            String containerFilter, String typeFilter, int statusFilter, long todayEpochDay, int defaultLeadTimeDays);
 
     // Synchronous twin of searchByName(""): used by ExpiryCheckWorker, which needs to
     // filter by each product's own effective (possibly type-overridden) lead time rather than

@@ -12,6 +12,7 @@ import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
@@ -22,7 +23,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.card.MaterialCardView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import bogdrosoft.expirymanager.R;
@@ -35,6 +38,7 @@ import bogdrosoft.expirymanager.ui.containers.ManageContainersActivity;
 import bogdrosoft.expirymanager.ui.settings.SettingsActivity;
 import bogdrosoft.expirymanager.ui.types.ManageTypesActivity;
 import bogdrosoft.expirymanager.util.Constants;
+import bogdrosoft.expirymanager.util.ProductStatusFilter;
 import bogdrosoft.expirymanager.util.SharedPrefsHelper;
 import bogdrosoft.expirymanager.util.SortOrder;
 
@@ -46,6 +50,19 @@ public class MainActivity extends AppCompatActivity {
     private ProductListAdapter adapter;
     private Map<String, Integer> typeLeadTimeOverrides = new HashMap<>();
     private boolean searchActive;
+
+    // Kept in sync with the DB via LiveData observers so the "Filter" dialog can build its
+    // container/type pickers instantly, without a fresh query each time it's opened.
+    private List<String> allContainerNames = new ArrayList<>();
+    private List<String> allTypeNames = new ArrayList<>();
+    // The filter dialogs are the only source of truth for these (not persisted across restarts,
+    // same as the search text), so plain fields are enough to track the current selection.
+    @Nullable
+    private String currentContainerFilter;
+    @Nullable
+    private String currentTypeFilter;
+    @Nullable
+    private ProductStatusFilter currentStatusFilter;
 
     private final ActivityResultLauncher<String[]> openDocumentLauncher =
             registerForActivityResult(new ActivityResultContracts.OpenDocument(), this::onImportFilePicked);
@@ -69,13 +86,23 @@ public class MainActivity extends AppCompatActivity {
         viewModel.getProducts().observe(this, products -> {
             adapter.submitList(products);
             boolean empty = products == null || products.isEmpty();
-            binding.textEmpty.setText(searchActive ? R.string.empty_search_message : R.string.empty_list_message);
+            int emptyMessageRes;
+            if (searchActive) {
+                emptyMessageRes = R.string.empty_search_message;
+            } else if (isAnyFilterActive()) {
+                emptyMessageRes = R.string.empty_filtered_message;
+            } else {
+                emptyMessageRes = R.string.empty_list_message;
+            }
+            binding.textEmpty.setText(emptyMessageRes);
             binding.textEmpty.setVisibility(empty ? android.view.View.VISIBLE : android.view.View.GONE);
         });
         viewModel.getTypeLeadTimeOverrides().observe(this, overrides -> {
             typeLeadTimeOverrides = overrides;
             adapter.setLeadTimeSettings(typeLeadTimeOverrides, SharedPrefsHelper.getLeadTimeDays(this));
         });
+        viewModel.getAllContainerNames().observe(this, names -> allContainerNames = names);
+        viewModel.getAllTypeNames().observe(this, names -> allTypeNames = names);
 
         binding.fabAdd.setOnClickListener(v -> {
             Intent intent = new Intent(this, AddEditActivity.class);
@@ -90,6 +117,11 @@ public class MainActivity extends AppCompatActivity {
         // so pick up any change made in Settings since we were last visible.
         adapter.setLeadTimeSettings(typeLeadTimeOverrides, SharedPrefsHelper.getLeadTimeDays(this));
         viewModel.setHideExhausted(SharedPrefsHelper.isHideExhaustedProductsEnabled(this));
+        viewModel.refreshDefaultLeadTimeDays(SharedPrefsHelper.getLeadTimeDays(this));
+    }
+
+    private boolean isAnyFilterActive() {
+        return currentContainerFilter != null || currentTypeFilter != null || currentStatusFilter != null;
     }
 
     private void onProductClicked(Product product, View anchorView) {
@@ -188,7 +220,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_sort) {
+        if (id == R.id.action_filter) {
+            showFilterDialog();
+            return true;
+        } else if (id == R.id.action_sort) {
             showSortDialog();
             return true;
         } else if (id == R.id.action_export) {
@@ -222,6 +257,112 @@ public class MainActivity extends AppCompatActivity {
                     dialog.dismiss();
                 })
                 .show();
+    }
+
+    /**
+     * Top-level "Filter" entry point: a row per dimension showing its current value (or "Any"),
+     * each opening its own single-choice value picker.
+     */
+    private void showFilterDialog() {
+        String[] rows = {
+                getString(R.string.filter_row_format, getString(R.string.filter_dimension_container),
+                        currentContainerFilter != null ? currentContainerFilter : getString(R.string.filter_value_any)),
+                getString(R.string.filter_row_format, getString(R.string.filter_dimension_type),
+                        currentTypeFilter != null ? currentTypeFilter : getString(R.string.filter_value_any)),
+                getString(R.string.filter_row_format, getString(R.string.filter_dimension_status),
+                        currentStatusFilter != null ? getStatusFilterLabel(currentStatusFilter) : getString(R.string.filter_value_any)),
+        };
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.title_filter_dialog)
+                .setItems(rows, (dialog, which) -> {
+                    if (which == 0) {
+                        showContainerFilterDialog();
+                    } else if (which == 1) {
+                        showTypeFilterDialog();
+                    } else {
+                        showStatusFilterDialog();
+                    }
+                })
+                .setNeutralButton(R.string.action_clear_filter, (dialog, which) -> clearFilters())
+                .show();
+    }
+
+    /**
+     * Resets container/type/status back to "Any" and applies immediately; the search text and
+     * sort order are untouched, since "Clear filter" is only about the Filter dialog's own
+     * dimensions.
+     */
+    private void clearFilters() {
+        currentContainerFilter = null;
+        currentTypeFilter = null;
+        currentStatusFilter = null;
+        viewModel.setContainerFilter(null);
+        viewModel.setTypeFilter(null);
+        viewModel.setStatusFilter(null);
+    }
+
+    private void showContainerFilterDialog() {
+        List<String> options = new ArrayList<>();
+        options.add(getString(R.string.filter_value_any));
+        options.addAll(allContainerNames);
+        int selected = currentContainerFilter == null ? 0 : Math.max(options.indexOf(currentContainerFilter), 0);
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.filter_dimension_container)
+                .setSingleChoiceItems(options.toArray(new String[0]), selected, (dialog, which) -> {
+                    currentContainerFilter = which == 0 ? null : options.get(which);
+                    viewModel.setContainerFilter(currentContainerFilter);
+                    dialog.dismiss();
+                })
+                .show();
+    }
+
+    private void showTypeFilterDialog() {
+        List<String> options = new ArrayList<>();
+        options.add(getString(R.string.filter_value_any));
+        options.addAll(allTypeNames);
+        int selected = currentTypeFilter == null ? 0 : Math.max(options.indexOf(currentTypeFilter), 0);
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.filter_dimension_type)
+                .setSingleChoiceItems(options.toArray(new String[0]), selected, (dialog, which) -> {
+                    currentTypeFilter = which == 0 ? null : options.get(which);
+                    viewModel.setTypeFilter(currentTypeFilter);
+                    dialog.dismiss();
+                })
+                .show();
+    }
+
+    private void showStatusFilterDialog() {
+        String[] options = {
+                getString(R.string.filter_value_any),
+                getString(R.string.status_filter_expired),
+                getString(R.string.status_filter_expiring_soon),
+                getString(R.string.status_filter_not_expiring),
+                getString(R.string.status_filter_exhausted),
+        };
+        int selected = currentStatusFilter == null ? 0 : currentStatusFilter.ordinal() + 1;
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.filter_dimension_status)
+                .setSingleChoiceItems(options, selected, (dialog, which) -> {
+                    currentStatusFilter = which == 0 ? null : ProductStatusFilter.values()[which - 1];
+                    viewModel.setStatusFilter(currentStatusFilter);
+                    dialog.dismiss();
+                })
+                .show();
+    }
+
+    private String getStatusFilterLabel(ProductStatusFilter status) {
+        switch (status) {
+            case EXPIRED:
+                return getString(R.string.status_filter_expired);
+            case EXPIRING_SOON:
+                return getString(R.string.status_filter_expiring_soon);
+            case NOT_EXPIRING:
+                return getString(R.string.status_filter_not_expiring);
+            case EXHAUSTED:
+                return getString(R.string.status_filter_exhausted);
+            default:
+                throw new IllegalArgumentException("Unknown status filter: " + status);
+        }
     }
 
     private void onImportFilePicked(Uri uri) {
