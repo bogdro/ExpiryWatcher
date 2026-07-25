@@ -34,7 +34,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
     // Also reused by ProductRepository.deleteAllData() to re-seed types/containers after a
     // full data wipe, so this is the single source of truth for the default lists.
-    public static final String[] DEFAULT_TYPE_NAMES = {"Grocery", "Medicine", "Dairy", "Household", "Other"};
+    public static final String[] DEFAULT_TYPE_NAMES = {"Grocery", "Medicine", "Dairy", "Household", "Documents", "Other"};
     public static final String[] DEFAULT_CONTAINER_NAMES = {"Fridge", "Freezer", "Pantry", "Medicine cabinet"};
 
     public abstract ProductDao productDao();
