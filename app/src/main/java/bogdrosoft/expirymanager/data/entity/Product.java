@@ -45,6 +45,10 @@ public class Product {
     @Nullable
     public String barcode;
 
+    // Free-text, user-entered notes. Optional and empty by default.
+    @Nullable
+    public String notes;
+
     @ColumnInfo(name = "created_at")
     public long createdAt;
 

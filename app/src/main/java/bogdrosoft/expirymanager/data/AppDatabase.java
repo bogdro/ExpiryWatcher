@@ -9,6 +9,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
+import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import java.util.concurrent.ExecutorService;
@@ -24,11 +25,22 @@ import bogdrosoft.expirymanager.data.entity.Product;
 import bogdrosoft.expirymanager.data.entity.ProductType;
 import bogdrosoft.expirymanager.util.Constants;
 
-@Database(entities = {Product.class, BarcodeDefaults.class, ProductType.class, Container.class}, version = 5, exportSchema = false)
+@Database(entities = {Product.class, BarcodeDefaults.class, ProductType.class, Container.class}, version = 6, exportSchema = false)
 @TypeConverters(Converters.class)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static volatile AppDatabase instance;
+
+    // Just a new nullable column, so an in-place migration (rather than the usual destructive
+    // fallback) is both trivial and worthwhile here: unlike earlier schema bumps, this one has
+    // real user data to lose (including a manually migrated import), and ALTER TABLE ADD COLUMN
+    // is a cheap, well-supported SQLite operation for exactly this case.
+    private static final Migration MIGRATION_5_6 = new Migration(5, 6) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase db) {
+            db.execSQL("ALTER TABLE products ADD COLUMN notes TEXT");
+        }
+    };
 
     public static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(2);
 
@@ -62,7 +74,9 @@ public abstract class AppDatabase extends RoomDatabase {
         // safe without a manual WAL checkpoint step.
         return Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, Constants.DATABASE_NAME)
                 .setJournalMode(JournalMode.TRUNCATE)
-                // No prior release to preserve data for; a schema bump just recreates the db.
+                .addMigrations(MIGRATION_5_6)
+                // Falls back to recreating the db for any version jump without its own
+                // migration above (there was no prior release to preserve data for until now).
                 .fallbackToDestructiveMigration()
                 .addCallback(new Callback() {
                     // Seeding here (rather than onCreate()) is deliberate: onCreate() only fires

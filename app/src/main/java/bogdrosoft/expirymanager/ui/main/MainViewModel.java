@@ -128,6 +128,7 @@ public class MainViewModel extends AndroidViewModel {
         copy.openDate = source.openDate;
         copy.container = source.container;
         copy.barcode = source.barcode;
+        copy.notes = source.notes;
         copy.createdAt = source.createdAt;
         copy.updatedAt = source.updatedAt;
         return copy;

@@ -50,6 +50,7 @@
     <string name="label_container">Container (optional)</string>
     <string name="action_clear_container">Clear container</string>
     <string name="label_barcode">Barcode</string>
+    <string name="label_notes">Notes (optional)</string>
     <string name="action_scan_barcode">Scan barcode</string>
     <string name="action_clear_open_date">Clear open date</string>
     <string name="action_save">Save</string>

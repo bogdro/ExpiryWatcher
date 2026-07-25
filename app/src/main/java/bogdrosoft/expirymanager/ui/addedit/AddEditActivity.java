@@ -189,6 +189,7 @@ public class AddEditActivity extends AppCompatActivity {
         binding.editUnit.setText(product.unit, false);
         binding.editContainer.setText(product.container != null ? product.container : "", false);
         binding.editBarcode.setText(product.barcode);
+        binding.editNotes.setText(product.notes);
         selectedExpiryDate = product.expiryDate;
         binding.editExpiryDate.setText(product.expiryDate.format(DATE_FORMATTER));
         selectedOpenDate = product.openDate;
@@ -211,6 +212,7 @@ public class AddEditActivity extends AppCompatActivity {
         binding.editUnit.setText(product.unit, false);
         binding.editContainer.setText(product.container != null ? product.container : "", false);
         binding.editBarcode.setText(product.barcode);
+        binding.editNotes.setText(product.notes);
         selectedExpiryDate = product.expiryDate;
         binding.editExpiryDate.setText(product.expiryDate.format(DATE_FORMATTER));
     }
@@ -278,6 +280,7 @@ public class AddEditActivity extends AppCompatActivity {
         String container = text(binding.editContainer);
         String quantityText = text(binding.editQuantity);
         String barcode = text(binding.editBarcode);
+        String notes = text(binding.editNotes);
 
         if (name.isEmpty()) {
             binding.layoutName.setError(getString(R.string.error_name_required));
@@ -312,6 +315,7 @@ public class AddEditActivity extends AppCompatActivity {
         product.expiryDate = selectedExpiryDate;
         product.openDate = selectedOpenDate;
         product.barcode = barcode.isEmpty() ? null : barcode;
+        product.notes = notes.isEmpty() ? null : notes;
 
         viewModel.save(product);
 
