@@ -8,6 +8,7 @@ import android.text.format.DateFormat;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.NotificationManagerCompat;
 
 import java.time.LocalTime;
@@ -18,7 +19,9 @@ import bogdrosoft.expirymanager.R;
 import bogdrosoft.expirymanager.databinding.ActivitySettingsBinding;
 import bogdrosoft.expirymanager.reminder.NotificationHelper;
 import bogdrosoft.expirymanager.reminder.ReminderScheduler;
+import bogdrosoft.expirymanager.util.NoFilterArrayAdapter;
 import bogdrosoft.expirymanager.util.SharedPrefsHelper;
+import bogdrosoft.expirymanager.util.UiMode;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -34,6 +37,15 @@ public class SettingsActivity extends AppCompatActivity {
         setTitle(R.string.title_settings);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         binding.toolbar.setNavigationOnClickListener(v -> finish());
+
+        String[] uiModeLabels = getResources().getStringArray(R.array.ui_mode_options);
+        binding.editUiMode.setAdapter(new NoFilterArrayAdapter<>(this, android.R.layout.simple_list_item_1, uiModeLabels));
+        binding.editUiMode.setText(uiModeLabels[SharedPrefsHelper.getUiMode(this).ordinal()], false);
+        binding.editUiMode.setOnItemClickListener((parent, view, position, id) -> {
+            UiMode selected = UiMode.fromOrdinal(position);
+            SharedPrefsHelper.setUiMode(this, selected);
+            AppCompatDelegate.setDefaultNightMode(selected.getNightMode());
+        });
 
         binding.editLeadTime.setText(String.valueOf(SharedPrefsHelper.getLeadTimeDays(this)));
         binding.switchScanSound.setChecked(SharedPrefsHelper.isScanSoundEnabled(this));

@@ -72,6 +72,15 @@ public final class SharedPrefsHelper {
         prefs(context).edit().putInt(Constants.PREF_SORT_ORDER, sortOrder.ordinal()).apply();
     }
 
+    public static UiMode getUiMode(Context context) {
+        int ordinal = prefs(context).getInt(Constants.PREF_UI_MODE, Constants.DEFAULT_UI_MODE);
+        return UiMode.fromOrdinal(ordinal);
+    }
+
+    public static void setUiMode(Context context, UiMode uiMode) {
+        prefs(context).edit().putInt(Constants.PREF_UI_MODE, uiMode.ordinal()).apply();
+    }
+
     private static SharedPreferences prefs(Context context) {
         return context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
     }

@@ -26,4 +26,12 @@
         <item>@string/sort_order_container_asc</item>
         <item>@string/sort_order_container_desc</item>
     </string-array>
+
+    <!-- Order must match bogdrosoft.expirymanager.util.UiMode's enum declaration order, since
+         its ordinal is used as the settings dropdown's selected index. -->
+    <string-array name="ui_mode_options">
+        <item>@string/ui_mode_system_default</item>
+        <item>@string/ui_mode_light</item>
+        <item>@string/ui_mode_dark</item>
+    </string-array>
 </resources>
