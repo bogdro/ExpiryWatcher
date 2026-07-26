@@ -6,6 +6,10 @@
     <string name="empty_list_message">No products yet. Tap + to add one.</string>
     <string name="empty_search_message">No products match your search.</string>
     <string name="empty_filtered_message">No products match the current filter.</string>
+    <plurals name="item_count">
+        <item quantity="one">%d item</item>
+        <item quantity="other">%d items</item>
+    </plurals>
     <string name="action_search">Search</string>
     <string name="search_hint">Search by name</string>
     <string name="action_filter">Filter</string>

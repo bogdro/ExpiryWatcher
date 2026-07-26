@@ -86,7 +86,8 @@ public class MainActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
         viewModel.getProducts().observe(this, products -> {
             adapter.submitList(products);
-            boolean empty = products == null || products.isEmpty();
+            int count = products == null ? 0 : products.size();
+            boolean empty = count == 0;
             int emptyMessageRes;
             if (searchActive) {
                 emptyMessageRes = R.string.empty_search_message;
@@ -97,6 +98,8 @@ public class MainActivity extends AppCompatActivity {
             }
             binding.textEmpty.setText(emptyMessageRes);
             binding.textEmpty.setVisibility(empty ? android.view.View.VISIBLE : android.view.View.GONE);
+            binding.textItemCount.setText(getResources().getQuantityString(R.plurals.item_count, count, count));
+            binding.textItemCount.setVisibility(empty ? android.view.View.GONE : android.view.View.VISIBLE);
         });
         viewModel.getTypeLeadTimeOverrides().observe(this, overrides -> {
             typeLeadTimeOverrides = overrides;
