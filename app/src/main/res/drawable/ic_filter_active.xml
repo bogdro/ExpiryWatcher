@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Same funnel glyph as ic_filter, plus a small badge dot to signal that a filter is applied. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/ic_filter" />
+    <item
+        android:width="8dp"
+        android:height="8dp"
+        android:top="1dp"
+        android:right="1dp"
+        android:gravity="top|end">
+        <shape android:shape="oval">
+            <solid android:color="@color/accent" />
+        </shape>
+    </item>
+</layer-list>

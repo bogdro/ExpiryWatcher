@@ -142,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
         viewModel.setContainerFilter(null);
         viewModel.setTypeFilter(null);
         viewModel.setStatusFilter(status);
+        invalidateOptionsMenu();
     }
 
     private boolean isAnyFilterActive() {
@@ -242,6 +243,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_filter)
+                .setIcon(isAnyFilterActive() ? R.drawable.ic_filter_active : R.drawable.ic_filter);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_filter) {
@@ -326,6 +334,7 @@ public class MainActivity extends AppCompatActivity {
         viewModel.setContainerFilter(null);
         viewModel.setTypeFilter(null);
         viewModel.setStatusFilter(null);
+        invalidateOptionsMenu();
     }
 
     private void showContainerFilterDialog() {
@@ -338,6 +347,7 @@ public class MainActivity extends AppCompatActivity {
                 .setSingleChoiceItems(options.toArray(new String[0]), selected, (dialog, which) -> {
                     currentContainerFilter = which == 0 ? null : options.get(which);
                     viewModel.setContainerFilter(currentContainerFilter);
+                    invalidateOptionsMenu();
                     dialog.dismiss();
                 })
                 .show();
@@ -353,6 +363,7 @@ public class MainActivity extends AppCompatActivity {
                 .setSingleChoiceItems(options.toArray(new String[0]), selected, (dialog, which) -> {
                     currentTypeFilter = which == 0 ? null : options.get(which);
                     viewModel.setTypeFilter(currentTypeFilter);
+                    invalidateOptionsMenu();
                     dialog.dismiss();
                 })
                 .show();
@@ -372,6 +383,7 @@ public class MainActivity extends AppCompatActivity {
                 .setSingleChoiceItems(options, selected, (dialog, which) -> {
                     currentStatusFilter = which == 0 ? null : ProductStatusFilter.values()[which - 1];
                     viewModel.setStatusFilter(currentStatusFilter);
+                    invalidateOptionsMenu();
                     dialog.dismiss();
                 })
                 .show();
