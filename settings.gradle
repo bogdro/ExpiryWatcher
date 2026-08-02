@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ExpiryManager"
+rootProject.name = "ExpiryWatcher"
 include ':app'

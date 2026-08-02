@@ -1,4 +1,4 @@
-package bogdrosoft.expirymanager.data;
+package bogdrosoft.expirywatcher.data;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -14,8 +14,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import bogdrosoft.expirymanager.data.dao.BarcodeDefaultsDao;
-import bogdrosoft.expirymanager.data.entity.BarcodeDefaults;
+import bogdrosoft.expirywatcher.data.dao.BarcodeDefaultsDao;
+import bogdrosoft.expirywatcher.data.entity.BarcodeDefaults;
 
 @RunWith(AndroidJUnit4.class)
 public class BarcodeDefaultsDaoTest {

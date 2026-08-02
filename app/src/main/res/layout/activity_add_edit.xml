@@ -14,8 +14,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            android:theme="@style/ThemeOverlay.ExpiryManager.Toolbar"
-            app:popupTheme="@style/Theme.ExpiryManager"
+            android:theme="@style/ThemeOverlay.ExpiryWatcher.Toolbar"
+            app:popupTheme="@style/Theme.ExpiryWatcher"
             app:titleTextColor="?attr/colorOnPrimary"
             app:navigationIconTint="?attr/colorOnPrimary" />
 
@@ -72,7 +72,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/button_decrease_quantity"
-                    style="@style/Widget.ExpiryManager.Button.DateAdjust"
+                    style="@style/Widget.ExpiryWatcher.Button.DateAdjust"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_marginEnd="8dp"
@@ -101,7 +101,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/button_increase_quantity"
-                    style="@style/Widget.ExpiryManager.Button.DateAdjust"
+                    style="@style/Widget.ExpiryWatcher.Button.DateAdjust"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_marginStart="8dp"
@@ -174,7 +174,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/button_expiry_minus_1m"
-                    style="@style/Widget.ExpiryManager.Button.DateAdjust"
+                    style="@style/Widget.ExpiryWatcher.Button.DateAdjust"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -183,7 +183,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/button_expiry_today"
-                    style="@style/Widget.ExpiryManager.Button.DateAdjust"
+                    style="@style/Widget.ExpiryWatcher.Button.DateAdjust"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -192,7 +192,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/button_expiry_plus_1m"
-                    style="@style/Widget.ExpiryManager.Button.DateAdjust"
+                    style="@style/Widget.ExpiryWatcher.Button.DateAdjust"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -201,7 +201,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/button_expiry_plus_3m"
-                    style="@style/Widget.ExpiryManager.Button.DateAdjust"
+                    style="@style/Widget.ExpiryWatcher.Button.DateAdjust"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -210,7 +210,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/button_expiry_plus_1y"
-                    style="@style/Widget.ExpiryManager.Button.DateAdjust"
+                    style="@style/Widget.ExpiryWatcher.Button.DateAdjust"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.ExpiryManager" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.ExpiryWatcher" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
         <item name="colorOnPrimary">@color/on_primary</item>
         <item name="colorAccent">@color/accent</item>
         <item name="android:windowBackground">@color/background_light</item>
-        <item name="alertDialogTheme">@style/ThemeOverlay.ExpiryManager.AlertDialog</item>
+        <item name="alertDialogTheme">@style/ThemeOverlay.ExpiryWatcher.AlertDialog</item>
     </style>
 
     <!-- Forces the navigation/back arrow and the overflow ("3 dots") icon on the colorPrimary
          toolbar to white in both day and night mode. Without this, AppCompat tints them via
          colorControlNormal from the ambient day/night theme, which resolves to a near-black
          color in light mode - low contrast against the green toolbar background. -->
-    <style name="ThemeOverlay.ExpiryManager.Toolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+    <style name="ThemeOverlay.ExpiryWatcher.Toolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="colorControlNormal">@color/on_primary</item>
     </style>
 
     <!-- Recolors AlertDialog buttons (Save/Cancel/Delete) with a day/night-aware color, since
          the app's plain "colorPrimary" green is too dark to read against the dark-mode dialog
          surface otherwise. -->
-    <style name="ThemeOverlay.ExpiryManager.AlertDialog" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
+    <style name="ThemeOverlay.ExpiryWatcher.AlertDialog" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
         <item name="colorPrimary">@color/dialog_button_color</item>
     </style>
 
     <!-- Filled buttons for the quick expiry-date adjust row: five need to fit on one line, so
          width-related sizing is trimmed well below the default MaterialButton spec, but height
          is kept at the same 48dp as the "Save" button below so they're just as easy to tap. -->
-    <style name="Widget.ExpiryManager.Button.DateAdjust" parent="Widget.MaterialComponents.Button">
+    <style name="Widget.ExpiryWatcher.Button.DateAdjust" parent="Widget.MaterialComponents.Button">
         <item name="android:insetTop">0dp</item>
         <item name="android:insetBottom">0dp</item>
         <item name="android:minWidth">0dp</item>

@@ -13,7 +13,7 @@
         <item>l</item>
     </string-array>
 
-    <!-- Order must match bogdrosoft.expirymanager.util.SortOrder's enum declaration order,
+    <!-- Order must match bogdrosoft.expirywatcher.util.SortOrder's enum declaration order,
          since its ordinal is used both as the picker's selected index and as the DB sort mode. -->
     <string-array name="sort_order_options">
         <item>@string/sort_order_expiry_asc</item>
@@ -26,7 +26,7 @@
         <item>@string/sort_order_container_desc</item>
     </string-array>
 
-    <!-- Order must match bogdrosoft.expirymanager.util.UiMode's enum declaration order, since
+    <!-- Order must match bogdrosoft.expirywatcher.util.UiMode's enum declaration order, since
          its ordinal is used as the settings dropdown's selected index. -->
     <string-array name="ui_mode_options">
         <item>@string/ui_mode_system_default</item>

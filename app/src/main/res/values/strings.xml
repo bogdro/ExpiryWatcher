@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Expiry Manager</string>
+    <string name="app_name">Expiry Watcher</string>
 
     <!-- Main list -->
     <string name="empty_list_message">No products yet. Tap + to add one.</string>
@@ -91,7 +91,7 @@
     <!-- Export / import -->
     <string name="export_chooser_title">Export product list</string>
     <string name="export_failed">Export failed: %1$s</string>
-    <string name="import_invalid_file">This file is not a valid Expiry Manager export</string>
+    <string name="import_invalid_file">This file is not a valid Expiry Watcher export</string>
     <string name="import_confirm_title">Replace current list?</string>
     <string name="import_confirm_message">Importing will replace all %1$d current products with the contents of this file. A backup of your current list will be kept on this device.</string>
     <string name="import_confirm_action">Replace</string>
@@ -177,8 +177,8 @@
     <!-- About -->
     <string name="title_about">About</string>
     <string name="about_version_format">Version %1$s</string>
-    <string name="about_description">Expiry Manager helps you track products by expiry date, scan barcodes to remember product details, and get reminders before things expire.</string>
+    <string name="about_description">Expiry Watcher helps you track products by expiry date, scan barcodes to remember product details, and get reminders before things expire.</string>
     <string name="about_author">Author: Bogdan Drozdowski (bogdro-soft@gmx.com)</string>
     <string name="about_developed_with_ai">Developed with the help of Claude (Sonnet 5) by Anthropic.</string>
-    <string name="about_website">https://github.com/bogdro/ExpiryManager</string>
+    <string name="about_website">https://github.com/bogdro/ExpiryWatcher</string>
 </resources>

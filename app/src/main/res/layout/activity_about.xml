@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        android:theme="@style/ThemeOverlay.ExpiryManager.Toolbar"
+        android:theme="@style/ThemeOverlay.ExpiryWatcher.Toolbar"
         app:titleTextColor="?attr/colorOnPrimary"
         app:navigationIconTint="?attr/colorOnPrimary" />
 

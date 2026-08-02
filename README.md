@@ -1,4 +1,4 @@
-# Expiry Manager
+# Expiry Watcher
 
 An Android app for tracking products (groceries, medicine, etc.) by expiry date.
 

@@ -1,4 +1,4 @@
-package bogdrosoft.expirymanager.data;
+package bogdrosoft.expirywatcher.data;
 
 import static org.junit.Assert.assertEquals;
 
@@ -16,8 +16,8 @@ import org.junit.runner.RunWith;
 import java.time.LocalDate;
 import java.util.List;
 
-import bogdrosoft.expirymanager.data.dao.ProductDao;
-import bogdrosoft.expirymanager.data.entity.Product;
+import bogdrosoft.expirywatcher.data.dao.ProductDao;
+import bogdrosoft.expirywatcher.data.entity.Product;
 
 @RunWith(AndroidJUnit4.class)
 public class ProductDaoTest {

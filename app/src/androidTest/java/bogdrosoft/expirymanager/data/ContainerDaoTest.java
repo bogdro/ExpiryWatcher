@@ -1,4 +1,4 @@
-package bogdrosoft.expirymanager.data;
+package bogdrosoft.expirywatcher.data;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -17,8 +17,8 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 
-import bogdrosoft.expirymanager.data.dao.ContainerDao;
-import bogdrosoft.expirymanager.data.entity.Container;
+import bogdrosoft.expirywatcher.data.dao.ContainerDao;
+import bogdrosoft.expirywatcher.data.entity.Container;
 
 @RunWith(AndroidJUnit4.class)
 public class ContainerDaoTest {
