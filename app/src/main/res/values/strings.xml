@@ -177,7 +177,7 @@
     <!-- About -->
     <string name="title_about">About</string>
     <string name="about_version_format">Version %1$s</string>
-    <string name="about_description">Expiry Watcher helps you track products by expiry date, scan barcodes to remember product details, and get reminders before things expire.</string>
+    <string name="about_description">Expiry Watcher helps you track products and documents by expiry date, scan barcodes to remember product details, and get reminders before things expire.</string>
     <string name="about_author">Author: Bogdan Drozdowski (bogdro-soft@gmx.com)</string>
     <string name="about_developed_with_ai">Developed with the help of Claude (Sonnet 5) by Anthropic.</string>
     <string name="about_website">https://github.com/bogdro/ExpiryWatcher</string>

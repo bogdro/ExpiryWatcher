@@ -1,6 +1,7 @@
 # Expiry Watcher
 
-An Android app for tracking products (groceries, medicine, etc.) by expiry date.
+An Android app for tracking products (groceries, medicine, etc.) and documents
+(like ID cards) by expiry date.
 
 ## Features
 
@@ -47,7 +48,7 @@ connected device/emulator.
 ## Project layout
 
 ```
-app/src/main/java/bogdrosoft/expirymanager/
+app/src/main/java/bogdrosoft/expirywatcher/
   data/            Room entities, DAOs, database, type converters
   repository/       ProductRepository — single source of truth for the UI layer
   ui/main/          Product list screen
