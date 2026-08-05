@@ -1,0 +1,29 @@
+This is the INSTALL file for ExpiryWatcher.
+
+ExpiryWatcher is a mobile application for monitoring expiry dates.
+
+Requirements:
+
+- a compatible operating system: Android,
+- camera permissions (for scanning barcodes),
+- notification permissions (for notifying about expired products).
+
+Installation steps - one-time preparation (optional):
+
+1. Download the .pem file containing the signer's certificate.
+2. Go to Settings -> Security and privacy -> More security and privacy
+   -> Encryption and credentials -> Install a certificate -> CA certificate
+   and install the certificate.
+
+Installation steps - simple:
+
+1. Download the chosen .apk file (debug or release).
+2. Open the Files application.
+3. Locate the downloaded .apk file.
+4. Tap the file to install.
+
+Uninstallation steps:
+
+1. Go to Settings -> Applications.
+2. Find the application on the list and tap it.
+3. Tap Uninstall.
