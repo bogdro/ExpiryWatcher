@@ -3,6 +3,12 @@
 An Android app for tracking products (groceries, medicine, etc.) and documents
 (like ID cards) by expiry date.
 
+Author: Bogdan Drozdowski, bogdro (at) users . sourceforge . net
+
+License: GPLv3+
+
+Project homepage: <https://expirywatcher.sourceforge.io/>.
+
 ## Features
 
 - Main list of products sorted by expiry date, soonest first.
