@@ -1,0 +1,564 @@
+2026-08-05      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryWatcher 3.0.0
+	  Application renamed to ExpiryWatcher. Updated contact info. Added
+	  license. Updated documentation. Updates in the build system.
+	* INSTALL-ExpiryWatcher.txt: Added installation instructions.
+	* app/src/**/*.java: Renamed the package and the required files.
+	  Added license.
+	* Makefile: Added a Makefile.
+	* app/build.gradle, app/proguard-rules.pro: Enabled minifying.
+	* AUTHORS, ChangeLog, NEWS: Added standard files.
+
+2026-07-26      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 2.0.3
+	  Show the visible item count above the product list. A centered
+	  label between the toolbar and the list now shows how many
+	  products are currently visible, matching the product-name font size.
+	  It reflects the live search/filter results since it's driven by the
+	  same LiveData the list is bound to, and hides itself when the list is
+	  empty.
+
+2026-07-26      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 2.0.2
+	  Show a badge dot on the filter icon when a filter is active.
+	  The filter icon now switches to a variant with a small orange dot
+	  whenever a container/type/status filter is applied, so the user can
+	  tell filtering is in effect without opening the Filter dialog. The
+	  menu is refreshed via invalidateOptionsMenu() whenever the filter
+	  state changes, including when a status filter is pre-applied from a
+	  notification tap.
+
+2026-07-26      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 2.0.1
+	  Keep search/filter/sort always visible in the toolbar, use a funnel
+	  icon for filter Filter and Sort were declared "ifRoom", so adding
+	  the Filter action left too little toolbar width on some screens
+	  and bumped Sort into the overflow menu. All three are now "always"
+	  shown, matching Search.
+	  Also swaps the filter icon from the three-bars "filter_list" glyph to
+	  the funnel-shaped filter_alt glyph more commonly used for filtering.
+
+2026-07-26      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 2.0.0
+	  Add an About screen and sync the version number to the git tag. New
+	  "About" entry in the overflow menu opens a screen with the app
+	  icon, name, version (read from PackageInfo, so it's always in sync
+	  with versionName), a short description, author contact, an
+	  AI-assistance disclosure, and a clickable link to the project's
+	  GitHub page.
+
+2026-07-26      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 1.6.2
+	  Use a human-readable timestamp in exported file names. Replaces the
+	  epoch-millis number with yyyy_MM_dd_HH_mm_ss, so an exported file's
+	  name says when it was made instead of an opaque number.
+
+2026-07-26      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 1.6.1
+	  Open the expiry notifications with their status filter pre-applied.
+	  Tapping the expired/expiring-soon notification now jumps straight to
+	  that status filter on the main list, clearing any other active filter
+	  first. Also fixes both notifications sharing PendingIntent request
+	  code 0, which could let one silently overwrite the other's tap target
+	  since PendingIntent identity ignores extras.
+
+2026-07-26      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 1.6.0
+	  Add a filter button to the main product list. Adds a toolbar Filter
+	  action (between Search and Sort) that opens a dialog for filtering
+	  by container, product type, and status (Expired/About to expire/
+	  Not expiring/Exhausted), each via its own single-choice picker,
+	  plus a "Clear filter" button to reset all three at once. Filtering
+	  happens in one query alongside search/sort/hide-exhausted, using
+	  each product's effective lead time (type override or global default)
+	  to compute status. Filters are session-only, like search.
+
+2026-07-25      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 1.5.1
+	  Add explanatory descriptions to Manage Types/Containers screens.
+	  A short blurb at the top of each screen explains what types and
+	  containers are for and gives example names, since neither concept is
+	  otherwise explained anywhere in the app.
+
+2026-07-25      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 1.5.0
+	  Allow renaming product types. The type editor's name field is now
+	  always editable instead of locked during edit, and adds an edit icon
+	  on each row (tapping the row already opened the editor). Renaming
+	  updates the type and every product referencing its old name in a
+	  single transaction, and rejects a name already used by another type,
+	  mirroring container renaming.
+
+2026-07-25      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 1.4.0
+	  Allow renaming containers. Adds an edit icon (and tapping the row)
+	  to the Manage Containers screen, opening the same editor used for
+	  adding, now with the name field editable. Renaming updates the
+	  container and every product referencing its old name in a single
+	  transaction, and rejects a name already used by another container.
+
+2026-07-25      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 1.3.4
+	  Color the remaining delete confirmation dialogs red. The product
+	  popup menu's delete confirmation and the edit screen's own delete
+	  confirmation were the two spots left still using the theme's default
+	  (green) button color instead of matching every other delete
+	  confirmation in the app.
+
+2026-07-25      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 1.3.3
+	  Require type and expiry date on the add/edit screen. Both are now
+	  validated the same way as name/quantity, with an inline field error
+	  instead of expiry date's previous Toast. The add screen's quantity
+	  field now defaults to 1 instead of empty, though 0 is still a
+	  valid, savable value on both screens.
+
+2026-07-25      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 1.3.2
+	  Hide expiry status and "Mark as opened" for exhausted products.
+	  Once a product's quantity hits 0, its expiry date and status
+	  ("Expired"/"X days left") aren't relevant anymore, so the main list
+	  now skips that line for exhausted products, and "Mark as opened" is
+	  hidden alongside the existing already-marked-as-opened check.
+	  Expiry notifications already excluded exhausted products.
+
+2026-07-25      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 1.3.1
+	  Hide "Mark as opened" once a product already has an open date.
+	  Otherwise the option stays in the popup with no visual indication it
+	  already applies, and re-tapping it just resets the date to today.
+
+2026-07-25      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 1.3.0
+	  Add a free-text notes field to products. Adds an optional multiline
+	  notes field to the add/edit screen, carried over on duplicate like
+	  the rest of the product's fields. Bumps the DB to version 6 with an
+	  explicit ALTER TABLE migration rather than the usual destructive
+	  fallback, since there's now real user data worth preserving across
+	  the upgrade.
+
+2026-07-25      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 1.2.1
+	  Add a "Documents" default product type.
+
+2026-07-25      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 1.2.0
+	  Sink exhausted products to the bottom for both expiry sort orders.
+	  Expiry ascending and descending now both put quantity-0 products
+	  last, matching the old "Default" mode's behavior. That made "Default"
+	  and "Expiry ascending" identical, so the separate Default option is
+	  removed and "Expiry date (ascending)" is labeled as the default
+	  instead.
+
+2026-07-25      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 1.1.0
+	  Add a UI theme setting (light/dark/system default). Settings now has
+	  a dropdown to force light or dark mode, or follow the system setting
+	  as before, applied immediately via AppCompatDelegate and persisted
+	  across restarts. Uses a filter-free ArrayAdapter for the dropdown,
+	  since AutoCompleteTextView's default filter would otherwise narrow
+	  the list down to whatever item was last selected.
+
+2026-07-23      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 1.0.0
+	  Add release signing config, reading credentials from an untracked
+	  file. Copy keystore.properties.example to keystore.properties and
+	  fill in your own keystore's path/alias/passwords to sign release
+	  builds. Without that file, assembleRelease still succeeds and just
+	  produces an unsigned APK, so the build doesn't break for anyone who
+	  hasn't set up a keystore.
+	  Name build output APKs after the app instead of the module Gradle's
+	  default app-debug.apk/app-release.apk naming comes from the module
+	  name, not the app; renames outputs to ExpiryManager-<variant>.apk
+	  so a shared/copied APK file is self-identifying.
+
+2026-07-23      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 0.23.0
+	  Add tap-to-refocus to the barcode scanner. Continuous autofocus can
+	  still get stuck on some devices (e.g. locked onto whatever was in
+	  frame when the camera opened) and never re-converge on its own.
+	  Tapping the preview now closes and reopens just the camera preview
+	  to reset its focus state, instead of the user having to back out of
+	  the whole scan screen and reopen it.
+
+2026-07-23      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 0.22.1
+	  Improve toolbar and quantity-button contrast in light mode. Forces
+	  the back arrow and overflow ("3 dots") icon white on every toolbar
+	  via a dedicated ThemeOverlay, since they defaulted to near-black in
+	  light mode against the green toolbar. Pins each overflow-menu-bearing
+	  toolbar's popupTheme back to the app theme so the dropdown itself
+	  doesn't inherit the same forced-white styling.
+	  Gives the add/edit screen's Duplicate/Delete toolbar icons their own
+	  colorOnPrimary drawables (ic_content_copy_on_primary,
+	  ic_delete_on_primary) so they're white like the rest of the toolbar,
+	  without touching the colorOnSurface versions still used by the
+	  product actions popup menu.
+	  Restyles the quantity -/+ buttons as filled MaterialButtons matching
+	  the expiry-date quick-adjust row, instead of plain borderless icon
+	  buttons.
+
+2026-07-23      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 0.22.0
+	  Color destructive delete actions red. Applies a day/night-aware
+	  delete_color to the 5 delete-related spots: the product popup menu's
+	  "Delete" item, the "Delete products" and "Delete all data" buttons,
+	  and the "Delete" button in each of their confirmation dialogs.
+	  Cancel buttons stay the theme's default green.
+
+2026-07-23      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 0.21.0
+	  Add quick expiry-date adjust buttons to the add/edit screen. Adds
+	  -1m/Today/+1m/+3m/+1y buttons below the expiry date field so common
+	  date shifts don't require the date picker. Buttons only touch the
+	  displayed date, never save. Sized to match the Save button's height
+	  (48dp) for easier tapping while staying compact enough for all five
+	  to fit on one row.
+
+2026-07-22      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 0.20.0
+	  Add +/- buttons to the quantity field on the add/edit screen. Moves
+	  the unit dropdown to its own row below to make room, since quantity
+	  + unit + two buttons didn't fit comfortably on one line.
+	  Quantity never goes below 0.
+
+2026-07-22      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 0.19.0
+	  Replace main list's tap-to-edit with a product actions popup menu.
+	  Tapping a product now shows a popup with Edit, Duplicate, Mark as
+	  opened, Set quantity to 0, and Delete, each with an icon (two new
+	  custom ones for the opened-box and quantity-zero actions). The tapped
+	  card gets a highlighted border for as long as the menu is open,
+	  cleared via the popup's dismiss listener regardless of how it was
+	  closed.
+	  Also switches ic_delete/ic_content_copy from a hardcoded black fill
+	  to the adaptive colorOnSurface, since they're now shown in this popup
+	  too (previously only on the colorPrimary toolbar) and need to stay
+	  legible in dark mode.
+
+2026-07-22      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 0.18.0
+	  Add a "Delete data" screen to Settings. A new row (navigation-style,
+	  with a chevron) opens a subscreen with two confirmed actions:
+	  "Delete products", which clears the product list but keeps barcode
+	  scan history/types/containers, and "Delete all data", which also
+	  clears scan history and resets types/containers back to their
+	  defaults. Other settings (e.g. reminder time) are untouched since
+	  they live in SharedPreferences rather than the database.
+	  Also wraps the Settings screen's content in a ScrollView, since it
+	  had grown taller than the screen and the new row was being cut off.
+
+2026-07-22      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 0.17.0
+	  Add a "Sort" button to the main list. Lets the user choose expiry
+	  date, name, type, or container, each ascending or descending, plus
+	  a "Default" option for the existing exhausted-at-bottom/expiry-date
+	  behavior. The choice persists across restarts via SharedPreferences.
+
+2026-07-22      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 0.16.1
+	  Fix low-contrast AlertDialog buttons in dark mode Save/Cancel/Delete
+	  button text used colorPrimary (a dark green), which read fine on a
+	  light dialog surface but was too dark against the near-black dialog
+	  surface in dark mode. Adds a dedicated, day/night-aware
+	  alertDialogTheme override instead of touching colorPrimary itself.
+
+2026-07-22      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 0.16.0
+	  Add a button to duplicate a product on the edit screen. Copies all
+	  fields, including the barcode, except the open date; saving the
+	  duplicate returns to the main list instead of the original edit
+	  screen, since going back to editing the source product isn't useful.
+
+2026-07-21      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 0.15.0
+	  Add a setting to hide exhausted products from the main list. Off by
+	  default. The setting lives in plain SharedPreferences, so
+	  MainViewModel bundles it with the search text into one Filter object
+	  feeding a single switchMap query, and MainActivity re-pushes its
+	  current value on every resume (same pattern already used for
+	  lead-time-based list coloring) since there's no LiveData to observe
+	  it directly.
+
+2026-07-21      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 0.14.0
+	  Exclude exhausted products from expiry notifications. Products with
+	  0 units left have nothing to use or throw out, so they no longer
+	  count toward either the expired or expiring-soon notification.
+
+2026-07-21      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 0.13.0
+	  Sort exhausted products to the bottom of the list. Products with 0
+	  units left now sort after everything else regardless of expiry date,
+	  sorted by expiry date within that group same as the rest. Their card
+	  background uses a new neutral grey (distinct in both light and dark
+	  mode), overriding the usual expired/near-expiry/fresh color so
+	  "exhausted" reads as its own status rather than another
+	  expiry-urgency level.
+	  Add "ml" and "l" to default unit suggestions.
+
+2026-07-21      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 0.12.0
+	  Split the expiry reminder into separate expired / expiring-soon
+	  notifications. Previously a single notification lumped
+	  already-overdue products together with ones merely approaching
+	  their reminder lead time, so its title (e.g. "2 products expiring
+	  soon") could be misleading when the mix included expired items.
+	  Now each category gets its own notification with an accurate title,
+	  and each can be toggled independently in Settings; turning one off
+	  cancels any already-shown notification for it instead of just
+	  suppressing future ones.
+
+2026-07-21      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 0.11.0
+	  Add expiry-status background colors to main list cards. Light-red
+	  for expired, yellow/orange for within the product's effective
+	  reminder lead time (its type's override, or the global default),
+	  light-green otherwise; dark-mode equivalents are muted for a dark
+	  surface but follow the same pattern. This also replaces the previous
+	  hardcoded "3 days" near-expiry threshold with the same effective
+	  lead time used for the actual reminder notifications, so the
+	  coloring and the notifications now agree. Existing status-text
+	  colors are brightened in dark mode too, since they were tuned for a
+	  neutral surface and read low-contrast against the new colored cards.
+
+2026-07-21      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 0.10.0
+	  Add a setting for the daily reminder notification time. Uses the
+	  standard android.app.TimePickerDialog, respecting the system's
+	  12/24-hour preference for both the picker and the summary text.
+	  Changing the time forces WorkManager to replace the existing
+	  periodic job so it re-anchors to the new time, since KEEP would
+	  otherwise ignore the change.
+
+2026-07-21      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 0.9.0
+	  Wire up the Manage Containers menu item. Missed alongside the
+	  containers feature commit: the main list's overflow menu already
+	  had the entry, but nothing opened the screen.
+	  Add DB indices on expiry_date and name expiry_date backs the main
+	  list's sort order and name backs the new search query; both were
+	  doing full table scans. Requires a schema version bump (another
+	  destructive migration/data wipe on next launch, same as the
+	  containers table addition).
+
+2026-07-21      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 0.8.0
+	  Improve barcode scan camera focus reliability. Continuous autofocus
+	  (instead of ZXing's default single-shot AUTO mode) plus barcode
+	  scene mode and metering hints, set via a CaptureActivity subclass
+	  per the library's documented extension point, so the camera keeps
+	  re-focusing instead of needing repeated scan attempts.
+	  Reorder default unit suggestions. Groups the container-like units
+	  (can, jar, box, bag, package) first, with the plain measures
+	  (pcs, g, kg) moved to the end.
+
+2026-07-21      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 0.7.1
+	  Fix Manage Types list not refreshing after editing lead time.
+	  Mutating the existing ProductType instance in place before saving
+	  corrupted DiffUtil's "old" comparison snapshot: that instance was
+	  the same object the adapter's currently-displayed list held, so the
+	  refreshed Room query result compared equal and the row was never
+	  re-bound until leaving and re-entering the screen. Building a fresh
+	  instance for the update avoids sharing state with the displayed list.
+
+2026-07-21      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 0.7.0
+	  Show a product's container in the main list. Reuses the existing
+	  detail line (type · quantity · unit), appending the container when
+	  one is set instead of adding a separate row.
+	  Add containers: where a product is stored. New optional, non-editable
+	  dropdown field on Add/Edit (Fridge, Freezer, Pantry, Medicine cabinet
+	  by default), populated only from a new "Manage Containers" screen,
+	  mirroring how product types already work. Container values are
+	  free-standing (not derived from products), so they survive product
+	  deletion, and the field is clearable like the open-date field.
+	  Also fixes the equivalent problem for product types: default-seeding
+	  data in RoomDatabase.Callback#onCreate() only runs for a truly new
+	  database file. fallbackToDestructiveMigration()'s upgrade path drops
+	  and recreates tables on an *existing* file without calling onCreate(),
+	  so an in-place update would have left both new tables' defaults empty.
+	  Moved seeding to onOpen() (idempotent via CONFLICT_IGNORE), which runs
+	  on every open regardless of how the schema got there.
+
+2026-07-21      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 0.6.1
+	  Fix open-date field's clear icon never appearing TextInputLayout's
+	  built-in "clear_text" end icon only shows itself once the EditText
+	  has focus, but the open-date field is intentionally non-focusable
+	  (tapping it opens a date picker instead of a keyboard), so the icon
+	  could never appear and there was no way to clear the field short of
+	  picking a date and cancelling. Replaced it with a custom end icon
+	  whose visibility is driven manually from the field's text content.
+	  Make the product type field a non-editable dropdown. Only values
+	  from Manage Types can now be picked in Add/Edit, since those are the
+	  only ones with a reminder lead time defined; free text was letting
+	  users create effectively-untracked type names.
+
+2026-07-21      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 0.6.0
+	  Add case-insensitive search by product name. The main list now has a
+	  SearchView in the toolbar; the underlying query switches between an
+	  unfiltered and a LIKE-filtered fetch depending on whether the user
+	  has typed anything, showing a distinct empty-state message while a
+	  search yields no matches.
+
+2026-07-19      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 0.5.0
+	  Add an optional open-date field to products. Products can now track
+	  when they were opened, separately from their expiry date. It's empty
+	  by default on both the add and edit screens, clearable via the
+	  field's end icon (it's not required, unlike expiry date), and never
+	  touched by barcode-based prefill since it's specific to a physical
+	  item, not a "usual" value. The main list shows it only when set.
+	  Bumps the Room schema to version 3 (products.open_date), which again
+	  makes exports from before this change invalid on import.
+
+2026-07-19      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 0.4.0
+	  Add type management screen and per-type expiry reminder overrides.
+	  New "Manage types" entry in the main screen's overflow menu opens a
+	  list of product types where each can be added, deleted, or given its
+	  own expiry reminder lead time (in days) that overrides the global
+	  default from Settings for products of that type. Leaving a type's
+	  lead time blank keeps using the global default, which is unchanged
+	  and still the fallback for any type without an override.
+	  ExpiryCheckWorker now resolves each product's effective lead time
+	  (its type's override if set, else the global default) instead of
+	  running a single fixed-threshold query, since the window can now vary
+	  per product. Removed the now-unused getExpiringByThresholdSync DAO
+	  method and its test accordingly.
+
+2026-07-19      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 0.3.0
+	  Add product type registry and make the type field an editable
+	  dropdown. Introduces a product_types table (name, optional per-type
+	  reminder lead-time override) seeded with a handful of defaults on
+	  first run.
+	  The add/edit screen's Type field is now an AutoCompleteTextView
+	  backed by that table, mirroring how the Unit field already works:
+	  pick from suggestions or type anything freely.
+	  Bumps the Room schema to v2 with fallbackToDestructiveMigration (no
+	  prior release to preserve data for), and updates DbImportManager's
+	  schema validation to require the new table so old-format exports are
+	  correctly rejected rather than silently importing incomplete data.
+
+2026-07-19      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 0.2.0
+	  Add a setting to toggle the barcode scan beep sound. The scan beep
+	  was previously hardcoded on. Added a "Scan sound" switch in Settings
+	  (SharedPreferences-backed, defaulting to on), and BarcodeScanHelper
+	  now reads that preference each time it launches the scanner instead
+	  of always enabling the beep.
+
+2026-07-19      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 0.1.2
+	  Fix: barcode scan icon nearly invisible in dark mode ic_barcode_scan
+	  was drawn with a hardcoded black fill and no tint, so on the dark
+	  theme's near-black background it was barely visible. Tinted it with
+	  ?attr/colorOnSurface, which resolves to a dark icon on light
+	  backgrounds and a light icon on dark backgrounds automatically.
+
+2026-07-19      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 0.1.1
+	  Fix: hide keyboard when leaving a text field for a non-text control.
+	  The expiry-date field and the scan button aren't text inputs, so
+	  tapping them didn't move focus away from whichever
+	  EditText/AutoCompleteTextView was previously focused: the cursor and
+	  keyboard stayed put instead of following the tap. Now explicitly
+	  clears focus and hides the soft keyboard before opening the date
+	  picker or launching the scanner.
+
+2026-07-19      Bogdan Drozdowski <bogdro #at# users . sourceforge . net>
+
+	* ExpiryManager 0.1.0
+	  Project skeleton: Gradle setup, wrapper, and minimal launcher screen.
+	  Sets up the Java/Gradle Android project (AGP 8.5.2, Gradle 8.7,
+	  minSdk 26), the app's visual resources (theme, colors, launcher
+	  icon, layouts), and a placeholder MainActivity so the module builds
+	  and launches end to end before any feature code lands.
+
+	  Add Room persistence layer: entities, DAOs, converters Product and
+	  BarcodeDefaults entities plus their DAOs, backed by an AppDatabase
+	  singleton forced into TRUNCATE journal mode so the on-disk .db file
+	  is always a complete snapshot for later export/import. Includes
+	  the shared app-wide Constants used throughout the rest of the
+	  codebase.
+
+	  Add repository, barcode scanning, export/import, and reminder support
+	  - ProductRepository: single source of truth for the UI layer,
+	  wrapping Room DAO access on a background executor.
+	  - BarcodeScanHelper: wraps zxing-android-embedded's scan contract
+	  plus the CAMERA runtime permission flow.
+	  - DbExportManager/DbImportManager: share the SQLite file via the
+	  system share sheet, and import one back with schema validation, a
+	  safety backup of the current data, and rollback on failure.
+	  - reminder/*: WorkManager-driven daily expiry check, notification
+	  channel/summary builder, and the lazy POST_NOTIFICATIONS request
+	  flow.
+
+	  Wire up product list, add/edit, and settings screens
+	  - MainActivity/MainViewModel/ProductListAdapter: the expiry-sorted
+	  list screen, with export/import/settings actions and a FAB to add
+	  products.
+	  - AddEditActivity/AddEditViewModel: name/type/quantity+unit
+	  /expiry-date form with barcode scanning, barcode-based prefill, and
+	  delete.
+	  - SettingsActivity: lead-time preference and a
+	  notification-permission shortcut.
+	  - ExpiryManagerApp creates the notification channel and schedules
+	  the daily reminder worker on startup.
+	  - AndroidManifest now declares the full activity graph, the ZXing
+	  capture activity, and the export FileProvider.
+	  Add Room DAO tests. Instrumented tests against an in-memory database,
+	  covering expiry-ascending ordering, the reminder threshold query,
+	  update/delete, and BarcodeDefaults upsert (REPLACE) semantics.

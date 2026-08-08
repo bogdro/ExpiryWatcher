@@ -1,7 +1,7 @@
 # Expiry Watcher
 
-An Android app for tracking products (groceries, medicine, etc.) and documents
-(like ID cards) by expiry date.
+A mobile application for tracking products' (groceries, medicine, etc.) and
+documents' (like ID cards) expiry dates.
 
 Author: Bogdan Drozdowski, bogdro (at) users . sourceforge . net
 
